@@ -1,0 +1,103 @@
+inherit:
+  - build-system/cmake
+
+  - compilation-settings
+
+  - make-base
+
+variables:
+  build-dir: build # TODO
+
+  cmake.build-type: ${next-value|${cmake.build-type:${compilation-mode}}}
+  cmake.build-type:debug: Debug
+  cmake.build-type:release: RelWithDebInfo
+
+  cmake.environment: ${cmake.environment:${mode}|${cmake.environment:default}}
+  cmake.environment:default:
+    - '@{shell.environment|[]}'
+    - '@{next-value|[]}'
+
+  cmake.options: ${cmake.options:${mode}|${cmake.options:default}}
+  cmake.options:default:
+    - CMAKE_INSTALL_PREFIX="${toolkit.dir}"
+    - CMAKE_BUILD_TYPE=${cmake.build-type}
+    - '@{next-value|[]}'
+  cmake.options:win32:
+    - CMAKE_INSTALL_PREFIX="${toolkit.dir}"
+    - CMAKE_BUILD_TYPE=${cmake.build-type}
+    - '@{next-value|[]}'
+
+  cmake.commandline-options: ${cmake.commandline-options:${mode}|${cmake.commandline-options:default}}
+  cmake.commandline-options:default: []
+  cmake.commandline-options:win32: ${next-value|[]}
+
+  cmake.make.commandline-options: ${cmake.make.commandline-options:${mode}|${cmake.make.commandline-options:default}}
+  cmake.make.commandline-options:default:
+    - -j${make.threads|1}
+    - '@{next-value|[]}'
+
+  make.flags: ${cmake.make.commandline-options}
+
+  shell.command: []
+
+  cmake.prepare-command: ${cmake.prepare-command:${mode}|${cmake.prepare-command:default}}
+  cmake.prepare-command:default: ' '
+
+  cmake.before-invocation: ${cmake.before-invocation:${mode}|${cmake.before-invocation:default}}
+  cmake.before-invocation:default: ' '
+
+  cmake.after-invocation: ${cmake.after-invocation:${mode}|${cmake.after-invocation:default}}
+  cmake.after-invocation:default: ' '
+
+aspects:
+  - name: cmake.cmake/unix
+    aspect: cmake/unix
+    conditions:
+      job.tags: unix
+    variables:
+      environment.exports: |
+        export ${cmake.environment}
+      cmake.cmdline.options: ${cmake.commandline-options}
+      dir-option-lines: |2
+          -D ${aspect.cmake/unix.dir-options} \
+      option-lines: |2
+          -D ${cmake.options} \
+      aspect.cmake/unix.command: |
+        mkdir -p "${build-dir}" && cd "${build-dir}"
+        rm -f CMakeCache.txt
+
+        # Preparation
+        ${cmake.prepare-command}
+
+        # Set environment variables
+        @{environment.exports}
+
+        # Find upstream CMake projects
+        @{aspect.cmake/unix.find-commands}
+
+        # Configure
+        ${cmake.before-invocation}cmake @{cmake.cmdline.options} \
+        @{dir-option-lines}@{option-lines} ..
+
+        ${make.command}
+        ${cmake.after-invocation}
+
+  - name: cmake.cmake/win32
+    aspect: cmake/win32
+    conditions:
+      job.tags: win32
+    variables:
+      cmake.cmdline.options: ${cmake.commandline-options:win32|${cmake.commandline-options}}
+      option-lines: -D ${cmake.options:win32|${cmake.options}} ^
+      aspect.cmake/win32.command: |
+        ${setup.build.environment:win32}
+        mkdir "${build-dir}"
+        cd "${build-dir}"
+        del CMakeCache.txt
+
+        # Configure
+        ${cmake.before-invocation}cmake "-GCodeBlocks - NMake Makefiles" @{cmake.cmdline.options} ^
+        @{option-lines} ..
+
+        ${make.command}
+        ${cmake.after-invocation}

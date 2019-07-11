@@ -1,0 +1,60 @@
+inherit:
+- python-version
+
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: python-pip
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: pip
+      platform-requires:
+        ubuntu:
+          packages:
+          - ${python.debian-package.prefix}-pip
+
+  - name: python-six
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: six
+        version: '1.9'
+      platform-requires:
+        ubuntu:
+          packages:
+          - ${python.debian-package.prefix}-six
+
+  - name: python-numpy
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: numpy
+        version: 1.14.5
+      platform-requires:
+        ubuntu:
+          packages:
+          - ${python.debian-package.prefix}-numpy
+
+  - name: python-scipy
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: scipy
+        version: 1.1.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - ${python.debian-package.prefix}-scipy
+
+  - name: python-lxml
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: lxml
+        version: 4.2.4
+      platform-requires:
+        ubuntu:
+          packages:
+          - ${python.debian-package.prefix}-lxml

@@ -1,0 +1,14 @@
+templates:
+  - forge/github
+  - common-lisp-executable
+  - base
+
+variables:
+  analysis.executable-name: build-generator
+  analysis.entry-point: build-generator.commandline-interface:main
+  analysis.executable-systems:
+    - 'build-generator.commandline-interface'
+
+  repository: https://github.com/rdtk/generator
+  branches:
+    - master

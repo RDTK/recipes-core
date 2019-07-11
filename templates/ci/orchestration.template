@@ -1,0 +1,135 @@
+inherit:
+  - jenkins/orchestration/base
+  - jenkins/orchestration/functions
+
+variables:
+  mode: ${next-value|ci}
+
+  orchestration-initial.build-job-name: ${next-value|${job-name}-${mode}-${distribution-name}}
+
+  orchestration.control.explanation: >-
+    This job starts builds for "root" projects in the
+    ${distribution-name} distribution such that all projects in the
+    distribution will eventually be built.
+
+  orchestration.control.code: |
+    ${orchestration.groovy.base}
+
+    // Dependency Data
+
+    dependencies = ${jobs.dependencies/groovy}
+
+    time = 0
+
+    def scheduleBuild(name) {
+      job = Hudson.instance.getJob(name)
+      logMessage("Scheduling build for \${linkTo(job)}")
+      job.scheduleBuild(new Cause.UpstreamCause(build))
+    }
+
+    // Schedule builds for "root" projects
+
+    dependencies
+      .findAll { entry -> !entry.value }
+      .each { entry -> scheduleBuild(entry.key) }
+
+  orchestration.initial.explanation: >-
+    This job enables all jobs and performs an initial build.
+
+  orchestration.initial.code: |
+    ${orchestration.groovy.base}
+    ${orchestration.groovy.scheduling}
+    ${orchestration.groovy.reporting}
+
+    // Dependency Data
+
+    dependencies = ${jobs.dependencies/groovy}
+
+    // Utilities
+
+    time  = 0
+    delta = 500
+
+    running = []
+    status = [:]
+
+    def scheduleBuild(name) {
+      job = Hudson.instance.getJob(name)
+      if (!job) {
+        logMessage("  Scheduling build for \${name} failed: job not found!")
+        return
+      }
+
+      job.enable()
+      logMessage("  Scheduling build for \${linkTo(job)}")
+      run = job.scheduleBuild2(0, new Cause.UpstreamCause(build))
+      if (run) {
+        running << run
+      }
+    }
+
+    def popBuild() {
+      done = running.find { build -> build.isDone() }
+      if (done) {
+        running.remove(done)
+        return done.get()
+      }
+    }
+
+    def spin() {
+      while (running) {
+        build = popBuild()
+        if (build) {
+          logMessage("\${build.result} \${linkTo(build.project)}, \${linkTo(build)}, \${toSeconds(build.duration)} s")
+          name = build.project.name
+          status[name][1] = build;
+          startableDownstreams(name).each {
+            project -> scheduleBuild(project)
+          }
+          logMessage("\${running.size} build(s)")
+        }
+
+        Thread.sleep(delta)
+        time += delta
+      }
+    }
+
+    // Main part
+
+    // Prepare build status map
+
+    dependencies
+      .each { entry -> status[entry.key] = [ null, null ] }
+
+    // Schedule builds for "root" projects
+
+    logMessage("Running build jobs")
+
+    dependencies
+      .findAll { entry ->
+        ((!entry.value || isStartable(entry))
+         && !isSuccessfulBuildAvailable(entry.key))
+      }
+      .each { entry -> scheduleBuild(entry.key) }
+    spin()
+
+    reportResultsAndMaybeFailBuild()
+
+jobs:
+  - name: orchestration-initial
+    variables:
+      job.tags:
+        - orchestration-control
+      build-job.kind: project
+      build-job.name: ${orchestration-initial.build-job-name}
+      build-job.description: |
+        Initial job for ${mode} mode of distribution ${distribution-name}.
+
+        ${description.generated}
+
+        ${orchestration.initial.explanation}
+
+        See
+        * ${documentation.groovy} for Groovy
+        * ${documentation.jenkins.api} for Jenkins API
+      orchestration.control.code: ${orchestration.initial.code}

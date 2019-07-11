@@ -1,0 +1,14 @@
+variables:
+
+  tasks.patterns:
+    - '**/*.c'
+    - '**/*.cpp'
+    - '**/*.cc'
+    - '**/*.h'
+    - '**/*.hpp'
+    - '**/*.hh'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - c++
+    - '@{next-value|[]}'

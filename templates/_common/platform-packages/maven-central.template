@@ -1,0 +1,15 @@
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: maven-central-xom/xom
+    variables:
+      extra-provides:
+      - nature: maven
+        target: xom/xom
+
+  - name: maven-central-junit/junit
+    variables:
+      extra-provides:
+      - nature: maven
+        target: junit/junit

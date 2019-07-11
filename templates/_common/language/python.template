@@ -1,0 +1,9 @@
+variables:
+
+  tasks.patterns:
+    - '**/*.py'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - python
+    - '@{next-value|[]}'

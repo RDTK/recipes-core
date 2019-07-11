@@ -1,0 +1,78 @@
+inherit:
+- build-system/maven
+
+- java-base
+- maven-manual-deploy
+
+variables:
+
+  maven.targets:
+  - install
+  - deploy
+  - dependency:copy-dependencies
+  - '@{next-value|[]}'
+
+  maven.properties:
+  - altDeploymentRepository=toolkit::default::file://${toolkit.dir}/share/repository
+  - outputDirectory=\${WORKSPACE}/.dependencies
+  - maven.repo.local=${maven.repo.local}
+  - skipTests=true
+  - mdep.copyPom=true
+  - prefix=${toolkit.dir}
+  - '@{next-value|[]}'
+
+  maven.private-repository?: false
+
+  deploy-dependencies.command: |
+    ${maven.shell.functions}
+    if ls .dependencies/*.pom >/dev/null 2>&1;
+    then
+        for pom in .dependencies/*.pom; do
+            prefix="\${pom%%.pom}"
+            for  jar in \${prefix}*.jar
+            do
+                classifier="\${jar##\${prefix}}"
+                classifier="\${classifier%%.jar}"
+                classifier="\${classifier##-}"
+                maven_install_with_pom "\${jar}" "\${pom}" "${maven.install.skip|i}" "\${classifier}"
+                maven_install_flat_jar "\${jar}"
+            done
+        done
+    fi
+    for jar in \$(find . -wholename '*/target/*.jar'); do
+        maven_install_flat_jar "\${jar}"
+    done
+
+aspects:
+  - name: maven-base.maven
+    aspect: maven
+    conditions:
+      job.tags: maven
+    variables:
+      aspect.maven.properties: ${maven.properties:${mode}|${maven.properties}}
+      aspect.maven.targets: ${maven.targets:${mode}|${maven.targets}}
+      aspect.maven.private-repository?: ${maven.private-repository?:${mode}|${maven.private-repository?}}
+      aspect.maven.settings-file: ${maven.settings-file:${mode}|${maven.settings-file|}}
+      aspect.maven.global-settings-file: ${maven.global-settings-file:${mode}|${maven.global-settings-file|}}
+
+  - name: maven-base.prepare-version
+    aspect: shell
+    conditions:
+      job.tags: unix
+      prepare-version.command: .+
+    variables:
+      aspect.builder-constraints.shell:
+      - - before
+        - type: maven
+      aspect.shell.command: ${prepare-version.command}
+
+  - name: maven-base.deploy-dependencies
+    aspect: shell
+    conditions:
+      job.tags: unix
+      deploy-dependencies.command: .+
+    variables:
+      aspect.builder-constraints.shell:
+      - - after
+        - type: maven
+      aspect.shell.command: ${deploy-dependencies.command}

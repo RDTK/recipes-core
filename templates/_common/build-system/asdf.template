@@ -1,0 +1,9 @@
+variables:
+
+  natures:
+    - asdf
+    - '@{next-value|[]}'
+
+  tasks.patterns:
+    - '**/*.asd'
+    - '@{next-value|[]}'

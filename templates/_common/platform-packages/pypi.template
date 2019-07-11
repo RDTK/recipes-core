@@ -1,0 +1,38 @@
+# The features of nature "setuptools" listed in this template are
+# provided by the PyPi package repository for Python.
+#
+# Since these packages will be installed into project workspaces
+# automatically when they appear as dependencies, we just list them as
+# "provided" here without specifying system packages to install.
+
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: python-pypi
+    variables:
+      extra-provides:
+      - nature: setuptools
+        target: coverage
+        version: 99.99.99
+      - nature: setuptools
+        target: epydoc
+        version: 99.99.99
+      - nature: setuptools
+        target: nose
+        version: 99.99.99
+      - nature: setuptools
+        target: nose-testconfig
+        version: 99.99.99
+      - nature: setuptools
+        target: protobuf
+        version: 99.99.99
+      - nature: setuptools
+        target: setuptools-epydoc
+        version: 99.99.99
+      - nature: setuptools
+        target: setuptools-lint
+        version: 99.99.99
+      - nature: setuptools
+        target: unittest-xml-reporting
+        version: 99.99.99

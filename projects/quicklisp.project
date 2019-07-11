@@ -1,0 +1,127 @@
+templates:
+  # - github can't do this until repository: false works
+  - freestyle
+  - base
+
+variables:
+  recipe.maintainer:
+    - Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+  description: Automatic download and installation of Common Lisp software
+  keywords:
+    - lisp
+    - installation
+    - download
+  license: MIT
+  programming-languages:
+    - Common Lisp
+
+  homepage.url: https://www.quicklisp.org/
+  documentation.url: ${homepage.url}
+
+  github.user: quicklisp
+  github.project: quicklisp-client
+
+  # Doesn't work yet
+  # repository: false
+
+  extra-provides:
+    - nature: meta
+      target: quicklisp
+    - '@{next-value|[]}'
+  extra-requires:
+    - nature: meta
+      target: common-lisp-compiler
+    - nature: program
+      target: wget
+    - '@{next-value|[]}'
+
+  install-directory: ${toolkit.dir}/share/common-lisp/quicklisp
+  setup-file: ${install-directory}/setup.lisp
+  lock-file: ${install-directory}/lock
+
+  binary-directory: ${binary-directory:${mode}|${dependency-dir}/bin}
+  binary-directory:ci: ${dependency-dir}/install/bin
+
+  execute-sbcl: |-
+    SBCL_HOME=${binary-directory}/../lib/sbcl ${binary-directory}/sbcl \
+      --core ${binary-directory}/../lib/sbcl/sbcl.core                 \
+      --noinform --no-userinit --disable-debugger
+
+  dist-version:
+    - ${version-name}
+  dist-version-initarg: :dist-version "quicklisp/${dist-version}"
+
+  install-command: |
+    if ! [ -f "${setup-file}" ] ; then
+      # Download Quicklisp installer
+      wget -q -O quicklisp.lisp https://beta.quicklisp.org/quicklisp.lisp
+
+      # Execute installation
+      ${execute-sbcl}                                    \
+        --load quicklisp.lisp                            \
+        --eval '(quicklisp-quickstart:install
+                 @{dist-version-initarg}
+                 :path "'"${install-directory}"'/")' \
+        --quit
+    ${update-command| }
+    fi
+
+    # Fixup permissions
+    chmod -R g+rwX "${install-directory}"
+
+  update-command: |
+    else
+      ${execute-sbcl}            \
+        --load "${setup-file}"   \
+        --eval '(let ((dist (first (ql-dist:all-dists))))
+                  (unless (string= (ql-dist:version dist) "@{dist-version}")
+                    (let* ((versions (ql-dist:available-versions (first (ql-dist:all-dists))))
+                           (url (cdr (assoc "@{dist-version}" versions :test (function string=)))))
+                      (ql-dist:install-dist url :prompt nil :replace t))))' \
+        --quit
+
+  shell.command: ${shell.command:${mode}|${install-command}}
+
+  archive-name: ${project-name}-${version-name}.tar.gz
+
+  shell.command:ci: |
+    ${install-command}
+
+    tar -czf ${archive-name} install
+
+  tasks.patterns:
+    - '**/*.lisp'
+
+  archive-pattern: ${archive-name}
+
+versions:
+  - name: current
+    variables:
+      dist-version: []
+      update-command: ${update-command:${mode}|${update-command:default}}
+      update-command:default: |
+        else
+          (
+            flock 9
+            ${execute-sbcl}                              \
+              --load "${setup-file}"                     \
+              --eval '(ql:update-client :prompt nil)'    \
+              --eval '(ql:update-all-dists :prompt nil)' \
+              --quit
+          ) 9> "${lock-file}"
+
+  - name: '2019-05-21'
+  - name: '2019-03-07'
+  - name: '2019-02-02'
+  - name: '2018-10-18'
+  - name: '2018-08-31'
+  - name: '2018-07-11'
+  - name: '2018-04-30'
+  - name: '2018-01-31'
+  - name: '2017-10-23'
+  - name: '2017-08-30'
+  - name: '2017-06-30'
+  - name: '2017-04-03'
+  - name: '2016-10-31'
+  - name: '2015-12-18'
+  - name: '2015-01-13'

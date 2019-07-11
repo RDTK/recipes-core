@@ -1,0 +1,22 @@
+variables:
+  subversion.checkout-strategy: ${next-value|fresh-copy}
+
+  extra-requires:
+    - nature: program
+      target: svn
+    - '@{next-value|[]}'
+
+aspects:
+  - name: repository/subversion.subversion
+    aspect: subversion
+    conditions:
+      scm: svn
+    variables:
+      aspect.builder-constraints.subversion:
+        - [ before, { type: <all> } ]
+
+      aspect.subversion.revision: ${commit|}
+      aspect.subversion.url: ${repository}/${branch-directory|/}/${sub-directory|/}
+      aspect.subversion.credentials: ${scm.credentials|}
+      aspect.subversion.local-dir: .
+      aspect.subversion.checkout-strategy: ${subversion.checkout-strategy}

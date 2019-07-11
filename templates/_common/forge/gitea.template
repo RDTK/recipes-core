@@ -1,0 +1,19 @@
+variables:
+  gitea.project: ${project-name}
+  gitea.project-url: ${gitea.instance-url}/${gitea.user}/${gitea.project|}
+
+  repository: ${next-value|${gitea.project-url}.git}
+
+  homepage.url: ${gitea.project-url}
+  wiki.url: ${gitea.project-url}/wiki
+  scm-browser.url: ${gitea.project-url}/src/branch/${branch|master}
+  bug-tracker.url: ${gitea.project-url}/issues
+
+aspects:
+  - name: forge/gitea.git-repository-browser
+    aspect: git-repository-browser
+    conditions:
+      scm: git
+    variables:
+      aspect.git-repository-browser.kind: gitea
+      aspect.git-repository-browser.url: ${gitea.project-url|}

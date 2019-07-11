@@ -1,0 +1,9 @@
+variables:
+
+  tasks.patterns:
+    - '**/*.lisp'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - common-lisp
+    - '@{next-value|[]}'

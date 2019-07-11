@@ -1,0 +1,14 @@
+variables:
+
+  natures:
+    - maven
+    - '@{next-value|[]}'
+
+  extra-requires:
+    - nature: program
+      target: mvn
+    - '@{next-value|[]}'
+
+  tasks.patterns:
+    - '**/pom.xml'
+    - '@{next-value|[]}'

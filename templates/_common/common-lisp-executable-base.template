@@ -1,0 +1,24 @@
+inherit:
+  - common-lisp-base
+
+variables:
+
+  lisp.binary-name: ${analysis.executable-name|${project-name}}
+
+  lisp.load-systems:default: ${analysis.executable-systems|[]}
+
+  lisp.entry-point: ${analysis.entry-point|[]}
+  lisp.entry-point-prefix: [ '-r' ]
+  lisp.entry-point-option: ' ${lisp.entry-point-prefix} "${lisp.entry-point|[]}"'
+  lisp.entry-points-prefix: [ '-DE' ]
+  lisp.entry-points-option: ' ${lisp.entry-points-prefix} "${lisp.entry-points|[]}"'
+
+  lisp.build-command: ${lisp.build-command:${mode}|${lisp.build-command:default}}
+  lisp.build-command:default: |
+    ${dependency-dir}/bin/cl-launch                                      \
+        --wrap 'SBCL_OPTIONS="${lisp.runtime-options| } \${SBCL_OPTIONS}"' \
+        ${lisp.source-registry-option}
+        @{lisp.load-systems.options|# not loading any systems}             \
+        --dump ! --output "${lisp.binary-name}"                            \
+        @{lisp.entry-point-option| }                                       \
+        @{lisp.entry-points-option| }

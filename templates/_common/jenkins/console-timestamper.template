@@ -1,0 +1,10 @@
+variables:
+  console-timestamper.enabled: ${next-value|true}
+
+aspects:
+  - name: console-timestamper
+    aspect: console-timestamper
+    conditions:
+      aspect.console-timestamper.enabled: 'true'
+    variables:
+      aspect.console-timestamper.enabled: ${console-timestamper.enabled}

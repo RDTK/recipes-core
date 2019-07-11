@@ -1,0 +1,7 @@
+inherit:
+  - autotools-base
+
+  - language/c
+
+  - platform-packages/programs
+  - platform-packages/libraries

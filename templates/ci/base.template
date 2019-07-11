@@ -1,0 +1,20 @@
+inherit:
+  - jenkins/job-defaults
+  - jenkins/retention
+  - jenkins/scm-polling
+  - jenkins/artifact-archiving
+
+  - repository/archive
+  - repository/git
+  - repository/subversion
+  - repository/mercurial
+
+  - boring
+
+variables:
+  mode: ci
+
+  compilation-mode: debug
+
+  dependency-dir: dep-dir
+  dependency-dir:relative: dep-dir/relative

@@ -1,0 +1,10 @@
+variables:
+
+  tasks.patterns:
+    - '**/*.c'
+    - '**/*.h'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - c
+    - '@{next-value|[]}'

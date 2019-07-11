@@ -1,0 +1,15 @@
+variables:
+
+  natures:
+    - cmake
+    - '@{next-value|[]}'
+
+  extra-requires:
+    - nature: program
+      target: cmake
+    - '@{next-value|[]}'
+
+  tasks.patterns:
+    - '**/CMakeLists.txt'
+    - '**/*.cmake'
+    - '@{next-value|[]}'

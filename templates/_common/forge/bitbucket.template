@@ -1,0 +1,28 @@
+variables:
+  bitbucket.instance-url: https://bitbucket.org
+
+  bitbucket.project: ${project-name}
+  bitbucket.project-url: ${bitbucket.instance-url}/${bitbucket.user}/${bitbucket.project}
+
+  scm: ${next-value|git}
+  repository: ${next-value|${bitbucket.project-url}}
+
+  homepage.url: ${bitbucket.project-url}
+  wiki.url: ${bitbucket.project-url}/wiki
+  scm-browser.url: ${bitbucket.project-url}
+  bug-tracker.url: ${bitbucket.project-url}/issues?status=new&status=open
+
+aspects:
+#   - name: bitbucket.bitbucket
+#     aspect: bitbucket
+#     variables:
+#       aspect.bitbucket.project-url: ${bitbucket.project-url}
+#       aspect.bitbucket.display-name: ${bitbucket.display-name|}
+
+#   - name: bitbucket.git-repository-browser
+#     aspect: mercurial-repository-browser
+#     conditions:
+#       scm: git
+#     variables:
+#       aspect.mercurial-repository-browser.kind: bitbucket-web
+#       aspect.mercurial-repository-browser.url: ${bitbucket.project-url|}

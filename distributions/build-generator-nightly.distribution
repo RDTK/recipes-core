@@ -1,0 +1,5 @@
+include:
+  - lisp/base-nightly
+
+versions:
+  - build-generator                 @master

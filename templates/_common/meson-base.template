@@ -1,0 +1,47 @@
+inherit:
+  - build-system/meson
+
+variables:
+
+  meson.build-directory: build
+  meson.buildtype: plain # debug debugoptimized release
+
+  meson.binary: meson
+  meson.arguments:
+    - --buildtype ${meson.buildtype}
+    - --prefix "${toolkit.dir}"
+  meson.argument-lines: |2
+        ${meson.arguments} \
+
+  ninja.binary: ninja
+
+  toolkit.dir: /foo
+
+  configure-command: |
+    ${meson.binary} setup \
+    @{meson.argument-lines}  "${meson.build-directory}" .
+
+  build-command: |
+    ${ninja.binary} -C "${meson.build-directory}"
+
+  test-command: |
+    ${ninja.binary} -C "${meson.build-directory}" test
+
+  install-command: |
+    ( cd "${meson.build-directory}" ; ${meson.binary} install )
+
+  shell.command: |
+    # Configure
+    ${configure-command}
+
+    # Build
+    ${build-command}
+
+    # Install
+    ${install-command}
+
+aspects:
+  - name: meson.shell
+    aspect: shell
+    variables:
+      aspect.shell.command: ${shell.command}

@@ -1,0 +1,31 @@
+inherit:
+  - boring
+
+variables:
+  tasks.exclude.directories: ${boring.directories}
+  tasks.exclude.directory-patterns: ${tasks.exclude.directories}/**/*.*
+  tasks.exclude:
+    - ${build-dir}/**/*.*
+    - '@{boring.files}'
+    - '@{tasks.exclude.directory-patterns}'
+
+  tasks.keywords.low: []
+  tasks.keywords.normal:
+    - TODO
+    - KLUDGE
+  tasks.keywords.high:
+    - HACK
+    - FIXME
+
+aspects:
+  - name: jenkins/tasks.tasks
+    aspect: tasks
+    conditions:
+      tasks.patterns: .*
+    variables:
+      aspect.tasks.patterns: ${tasks.patterns:${mode}|${tasks.patterns|}}
+      aspect.tasks.exclude: ${tasks.exclude:${mode}|${tasks.exclude}}
+      aspect.tasks.keywords.low: ${tasks.keywords.low:${mode}|${tasks.keywords.low}}
+      aspect.tasks.keywords.normal: ${tasks.keywords.normal:${mode}|${tasks.keywords.normal}}
+      aspect.tasks.keywords.high: ${tasks.keywords.high:${mode}|${tasks.keywords.high}}
+      aspect.tasks.pattern: ${aspect.tasks.patterns}

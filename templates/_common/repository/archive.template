@@ -1,0 +1,29 @@
+variables:
+  extra-requires:
+    - nature: program
+      target: wget
+    - nature: program
+      target: unp
+    - nature: program
+      target: unzip
+    - nature: program
+      target: tar
+    - nature: program
+      target: bzip2
+    - nature: program
+      target: gzip
+    - '@{next-value|[]}'
+
+aspects:
+  - name: repository/archive.archive
+    aspect: archive
+    conditions:
+      scm: archive
+    variables:
+      aspect.builder-constraints.archive:
+        - [ before, { type: <all> } ]
+
+      aspect.archive.url: ${repository}
+      aspect.archive.filename: ${archive.filename|}
+      aspect.archive.username: ${scm.username|}
+      aspect.archive.password: ${scm.password|}

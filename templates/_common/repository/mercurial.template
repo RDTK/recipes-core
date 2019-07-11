@@ -1,0 +1,24 @@
+variables:
+  mercurial.clean-before-checkout?: ${next-value|${true}}
+
+  extra-requires:
+  # - '@(if $(equal ${scm} mercurial)
+  #         - nature: program
+  #           target: hg
+  #   )'
+  - '@{next-value|[]}'
+
+aspects:
+  - name: repository/mercurial.mercurial
+    aspect: mercurial
+    conditions:
+      scm: mercurial
+    variables:
+      aspect.builder-constraints.mercurial:
+      - [ before, { type: <all> } ]
+
+      aspect.mercurial.url: ${repository}
+      aspect.mercurial.branch: ${branch|}
+      aspect.mercurial.tag: ${tag|}
+      aspect.mercurial.credentials: ${scm.credentials|}
+      aspect.mercurial.clean?: ${mercurial.clean-before-checkout?}

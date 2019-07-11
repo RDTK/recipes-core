@@ -1,0 +1,52 @@
+inherit:
+  - build-system/autotools
+
+  - make-base
+
+variables:
+
+  bootstrap.command: ${bootstrap.command:${mode}|${bootstrap.command:default|# Nothing to do}}
+
+  configure.prefix: ${toolkit.dir}
+
+  configure.enable: ${configure.enable:${mode}|${configure.enable:default}}
+  configure.enable:default: []
+  configure.enable-args: |2
+      --enable-${configure.enable} \
+
+  configure.disable: ${configure.disable:${mode}|${configure.disable:default}}
+  configure.disable:default: []
+  configure.disable-args: |2
+      --disable-${configure.disable} \
+
+  configure.with: ${configure.with:${mode}|${configure.with:default}}
+  configure.with:default: []
+  configure.with-args: |2
+      --with-${configure.with} \
+
+  configure.args: '@{configure.enable-args}@{configure.disable-args}@{configure.with-args} '
+
+  configure.after: ${next-value| }
+
+  make.test.targets:
+  - check
+
+  shell.command: ${shell.command:${mode}|${shell.command:default}}
+  shell.command:default: |
+    # Environment Setup
+    @{environment.exports}
+
+    # Bootstrap
+    ${bootstrap.command}
+
+    # Configure
+    ./configure \
+    ${configure.args} --prefix="${configure.prefix}"
+
+    ${configure.after}
+
+    ${make.command}
+
+  build-job.tags:
+  - gcc
+  - '@{next-value|[]}'

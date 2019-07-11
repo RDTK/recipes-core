@@ -1,0 +1,100 @@
+inherit:
+  - build-system/asdf
+
+  - language/common-lisp
+
+  - boring
+
+variables:
+
+  extra-requires:
+    - nature: program
+      target: cl-launch
+    - nature: meta
+      target: quicklisp
+
+    # For archiving/installing source code
+    - nature: program
+      target: tar
+
+    - '@{next-value|[]}'
+
+  lisp.source-dir: ${lisp.source-dir:${mode}|${lisp.source-dir:default}}
+  lisp.source-dir:default: ${dependency-dir}/share/common-lisp/source
+  lisp.project-source-dir: ${lisp.source-dir}/${project-name}.${version-name}
+
+  # Source code archiving
+  lisp.archive.filename: ${lisp.archive.filename:${mode}|${lisp.archive.filename:default}}
+  lisp.archive.filename:default: ${project-name}-${version-name}.tar.gz
+
+  lisp.archive.exclude: ${lisp.archive.exclude:${mode}|${lisp.archive.exclude:default}}
+  lisp.archive.exclude:default: ${boring.everything}
+  lisp.archive.exclude.options: '--exclude ${lisp.archive.exclude} '
+
+  lisp.archive.command: ${lisp.archive.command:${mode}|${lisp.archive.command:default}}
+
+  # Building and executing
+  lisp.fasl-cache-directory:relative: fasl-cache
+  lisp.fasl-cache-directory:absolute: \${WORKSPACE}/${lisp.fasl-cache-directory:relative}
+
+  lisp.environment: ${lisp.environment:${mode}|${lisp.environment:default}}
+  lisp.environment:default:
+    - ASDF_OUTPUT_TRANSLATIONS=/:${lisp.fasl-cache-directory:absolute}/
+  lisp.environment.commands: ${lisp.environment.commands:${mode}|${lisp.environment.commands:default}}
+  lisp.environment.commands:default: |
+    export "${lisp.environment}"
+
+  lisp.load-systems: ${lisp.load-systems:${mode}|${lisp.load-systems:default}}
+  lisp.load-systems:default: ${analysis.systems}
+
+  lisp.load-systems.options: ${lisp.load-systems.options:${mode}|-s ${lisp.load-systems} }
+  lisp.load-systems.options:ci: '-s ${lisp.test.systems} '
+
+  lisp.test.systems: ${analysis.test-systems|${lisp.load-systems}}
+  lisp.test.system-keywords: ':${lisp.test.systems} '
+
+  lisp.test.expression: ${lisp.test.expression:${mode}|${lisp.test.expression:default}}
+  lisp.test.expression:default: |
+    '(mapc (function asdf:test-system) (list @{lisp.test.system-keywords}))'
+
+  binary-directory: ${binary-directory:${mode}|${binary-directory:default}}
+  binary-directory:default: ${dependency-dir}/bin
+  binary-directory:ci: ${dependency-dir}/install/bin
+
+  # Commands
+
+  lisp.source-registry-option: |
+    -S "(:source-registry                                              \
+           (:tree \""\$(pwd)"\")                                       \
+           (:tree \"${dependency-dir}/share/common-lisp/source\")      \
+           :ignore-inherited-configuration)"                           \
+
+  lisp.test.command: |
+    ${binary-directory}/cl-launch                                        \
+      --wrap 'SBCL_OPTIONS="${lisp.runtime-options| } \${SBCL_OPTIONS}"' \
+      ${lisp.source-registry-option}
+      @{lisp.load-systems.options}                                       \
+      ${lisp.test.expression}
+
+  shell.command: |
+    # Set up environment
+    @{lisp.environment.commands}
+
+    # Execute tests
+    ${lisp.test.command}
+
+  build-job.tags:
+    - cl-launch
+    - sbcl
+    - '@{next-value|[]}'
+
+aspects:
+  - name: common-lisp.shell
+    aspect: shell
+    conditions:
+      job.tags: unix
+    variables:
+      aspect.builder-constraints.shell:
+        - [ after, { name: dependency-download } ]
+        - [ after, { type: copy-artifact }       ]
+      aspect.shell.command: ${shell.command:${mode}|${shell.command}}

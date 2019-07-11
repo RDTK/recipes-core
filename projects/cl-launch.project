@@ -1,0 +1,128 @@
+templates:
+  - forge/gitlab
+  - freestyle
+  - base
+
+variables:
+  recipe.maintainer:
+    - Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+  description: Shell wrapper for Common Lisp
+  keywords:
+    - scripting
+    - deployment
+  license: MIT
+  programming-languages:
+    - Common Lisp
+    - Bash
+
+  gitlab.instance-url: https://gitlab.common-lisp.net
+  gitlab.group: xcvb
+  mailing-list.url: https://lists.common-lisp.net/${gitlab.group}/${gitlab.project}
+
+  branches:
+    - master
+  tags:
+    - 4.1.3
+
+  extra-provides:
+    - nature: program
+      target: cl-launch
+    - '@{next-value|[]}'
+  extra-requires:
+    - nature: meta
+      target: quicklisp
+    - nature: meta
+      target: common-lisp-compiler
+    - nature: program
+      target: make
+    - nature: program
+      target: tar
+    - '@{next-value|[]}'
+
+  runtime-dependency-dir: ${runtime-dependency-dir:${mode}|${dependency-dir}}
+  runtime-dependency-dir:ci: ${dependency-dir}/install
+
+  replacements:
+    - try_resource_file /etc/cl-launchrc#try_resource_file "${runtime-dependency-dir}"/etc/cl-launchrc
+    - try_resource_file "\\$HOME/\.cl-launchrc"#
+    - |-
+        (try (subpathname (user-homedir-pathname) "quicklisp/setup.lisp"))#(try (merge-pathnames "../share/common-lisp/quicklisp/setup.lisp" (load-time-value *load-pathname*)))\
+        (try (subpathname (user-homedir-pathname) "quicklisp/setup.lisp"))
+  replacement-commands: s#${replacements}#;
+
+  sbcl.home-export: export SBCL_HOME=${runtime-dependency-dir}/lib/sbcl/
+  sbcl.runtime-options: ${sbcl.runtime-options:${mode}|${sbcl.runtime-options:default}}
+  sbcl.runtime-options:default: --noinform --no-userinit
+
+  configuration.file: ${toolkit.dir}/etc/cl-launchrc
+  configuration: ${configuration:${mode}|${configuration:default}}
+  configuration:default: |
+    SBCL=\${SBCL:-"${runtime-dependency-dir}/bin/sbcl"}
+    SBCL_OPTIONS=\${SBCL_OPTIONS:-"${sbcl.runtime-options}"}
+
+    LISPS=sbcl
+
+    SOURCE_REGISTRY=\${SOURCE_REGISTRY:-"${runtime-dependency-dir}/share/common-lisp/source//"}
+  configuration:ci: |
+    ${sbcl.home-export}
+
+    ${configuration:default}
+
+  install.binary-name: ${toolkit.dir}/bin/cl-launch
+  install.source-dir: ${toolkit.dir}/share/common-lisp/source/cl-launch/
+  install.command: |
+    mkdir -p "${toolkit.dir}"/etc
+    mkdir -p "${toolkit.dir}"/bin
+
+    ./cl-launch.sh                      \
+      --include "${install.source-dir}" \
+      --rc                              \
+      --quicklisp                       \
+      --output "${install.binary-name}" \
+      -B install                        \
+      > /dev/null
+
+    sed -i -e '@{replacement-commands}' "${install.binary-name}"
+
+    cp dispatch.lisp "${install.source-dir}/"
+    chmod 644 "${install.source-dir}/dispatch.lisp"
+
+    cat  > "${configuration.file}" <<"EOF"
+    ${configuration}
+    EOF
+
+  shell.command: ${install.command}
+
+  archive-name: ${project-name}-${version-name}.tar.gz
+
+  shell.command:ci: |
+    ${install.command}
+
+    tar -czf ${archive-name} install
+
+  deployment.test: |
+    "${install.binary-name}" --version
+    "${install.binary-name}" -s cl-launch/dispatch
+
+  tasks.patterns:
+    - '*.lisp'
+    - '*.sh'
+    - Makefile
+    - '@{next-value|[]}'
+
+  archive-pattern: ${archive-name}
+
+versions:
+  - pattern: '^([0-9]+\.[0-9]+\.[0-9]+)-for-sbcl-binary$'
+    variables:
+      tag: ${match:1}
+
+      configuration:toolkit: |
+        ${sbcl.home-export}
+
+        ${configuration:default}
+
+      configuration:ci-deploy: |
+        ${sbcl.home-export}
+
+        ${configuration:default}

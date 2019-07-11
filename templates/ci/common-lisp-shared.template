@@ -1,0 +1,27 @@
+variables:
+  lisp.archive.exclude:ci:
+    - sloccount.sc
+    - ${lisp.fasl-cache-directory:relative}
+    - ${dependency-dir:relative}
+    - '@{lisp.archive.exclude:default}'
+
+  lisp.archive.command: |
+    # Package source code
+    temp=$(mktemp -u).tar.gz
+    tar @{lisp.archive.exclude.options}                            \
+      --transform 's#^\.\(.*\)#${project-name}-${version-name}\1#' \
+      -czf "\${temp}"                                              \
+      .
+    mv "\${temp}" "${lisp.archive.filename}"
+
+    archive-pattern: ${lisp.archive.filename}
+
+aspects:
+  - name: common-lisp-shared.archive-source-code
+    aspect: shell
+    conditions:
+      job.tags: unix
+    variables:
+      aspect.builder-constraints.shell:
+        - [ after, <all> ]
+      aspect.shell.command: ${lisp.archive.command}

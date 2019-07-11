@@ -1,0 +1,157 @@
+variables:
+  documentation.groovy: http://groovy-lang.org/single-page-documentation.html
+  documentation.jenkins.api: http://javadoc.jenkins-ci.org/hudson/model/package-summary.html
+
+  orchestration.groovy.base: |
+    // For documentation on Groovy scripting in Jenkins see
+    // * ${documentation.groovy}
+    // * ${documentation.jenkins.api}
+
+    // Base functionality
+
+    import groovy.time.*
+
+    import hudson.AbortException
+    import hudson.model.*
+    import hudson.console.ModelHyperlinkNote
+
+    def toSeconds(time) {
+      return (time/1000).asType(Integer)
+    }
+
+    def linkTo(object) {
+      ModelHyperlinkNote.encodeTo(object)
+    }
+
+    def logMessage(message) {
+      println "\${message}"
+    }
+
+  orchestration.groovy.success-results-list: Result.${orchestration.success-results},
+
+  orchestration.groovy.scheduling: |
+    // Scheduling functions
+
+    successResults = [ @{orchestration.groovy.success-results-list} ]
+
+    def markSuccessfulAndRecentBuilds(ageLimit, successResults = this.successResults) {
+      logMessage("Marking successful builds more recent than \${ageLimit}")
+      status.each { entry ->
+        job = Hudson.instance.getJob(entry.key)
+        if (!job) { return }
+
+        lastBuild = job.getLastBuild()
+        if (lastBuild?.result in successResults && lastBuild.getTime() > ageLimit) {
+          logMessage("  \${lastBuild.result} \${linkTo(job)}, \${linkTo(lastBuild)}")
+          status[entry.key] = [ lastBuild, entry.value[1] ]
+        }
+      }
+    }
+
+    def markSuccessfulBuilds(successResults = this.successResults) {
+      logMessage("Marking successful builds")
+      status.each { entry ->
+        job = Hudson.instance.getJob(entry.key)
+        if (!job) { return }
+
+        lastBuild = job.getLastBuild()
+        if (!job.disabled && lastBuild?.result in successResults) {
+          logMessage("  \${lastBuild.result} \${linkTo(job)}, \${linkTo(lastBuild)}")
+          status[entry.key] = [ lastBuild, entry.value[1] ]
+        }
+      }
+    }
+
+    def isSuccessfulBuildAvailable(name, successResults = this.successResults) {
+      if (!status[name]) { return false }
+
+      def (oldBuild, newBuild) = status[name]
+      ((oldBuild && oldBuild?.result in successResults)
+       || (newBuild && newBuild?.result in successResults))
+    }
+
+    def isStartable(entry, successResults = this.successResults) {
+      entry.value.every { dependency ->
+        isSuccessfulBuildAvailable(dependency, successResults)
+      }
+    }
+
+    def downstreams(upstream) {
+      dependencies.findAll { entry ->
+        upstream in entry.value
+      }
+    }
+
+    def startableDownstreams(upstream, successResults = this.successResults) {
+      downstreams(upstream)
+        .findAll({ entry -> isStartable(entry, successResults) })
+        *.key
+    }
+
+    def runHook(message, name, parameters = false) {
+      if (isSuccessfulBuildAvailable(name)) { return }
+
+      logMessage(message)
+      if (parameters) {
+        scheduleBuild(name, parameters)
+        spin(parameters)
+      } else {
+        scheduleBuild(name)
+        spin()
+      }
+      if (!isSuccessfulBuildAvailable(name)) { throw new AbortException("\${message} failed") }
+    }
+
+  orchestration.groovy.reporting: |
+    // Reporting Functions
+
+    def buildsWithResult(result) {
+      status
+        .findAll { entry ->
+          switch (result) {
+            case "missing":
+              !entry.value[1] && !Hudson.instance.getJob(entry.key)
+            case "skipped":
+              !entry.value[1] && Hudson.instance.getJob(entry.key)
+            default:
+              entry.value[1]?.result == result
+          }
+        }
+    }
+
+    def partitionResults() {
+      [ "missing", "skipped", Result.FAILURE, Result.UNSTABLE, Result.ABORTED ]
+        .collect(this.&buildsWithResult)
+    }
+
+    def reportBuilds(builds, label) {
+      if (builds) {
+        println "\${builds.size()} \${label} build(s):"
+        for (entry in builds) {
+          if (entry.value[1]?.result) {
+            build = entry.value[1]
+            println "  \${build.result} \${linkTo(build.project)}, \${linkTo(build)}"
+          } else {
+            name = entry.key
+            println "  \${name}"
+          }
+        }
+      }
+    }
+
+    def maybeFailBuild(builds) {
+      if (builds) {
+        throw new AbortException("Some projects did not build successfully: \${builds*.key.join(', ')}")
+      }
+    }
+
+    def reportResultsAndMaybeFailBuild() {
+      def (missing, skipped, failed, unstable, aborted) = partitionResults()
+      reportBuilds(missing,  'missing')
+      reportBuilds(skipped,  'skipped')
+      reportBuilds(failed,   'failed')
+      reportBuilds(unstable, 'unstable')
+      reportBuilds(aborted,  'aborted')
+
+      maybeFailBuild(missing + failed + aborted)
+    }

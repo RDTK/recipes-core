@@ -1,0 +1,28 @@
+inherit:
+  - language/common-lisp
+
+  - build-system/asdf
+
+  - platform-packages/programs
+  - platform-packages/libraries # for foreign functions
+  - platform-packages/quicklisp
+
+  - common-lisp-shared
+  - common-lisp-executable-base
+
+variables:
+  lisp.install-command: ${lisp.install-command:${mode}|${lisp.install-command:default}}
+  lisp.install-command:default: |
+    cp "${lisp.binary-name}" ${toolkit.dir}/bin/
+
+  shell.command: |
+    ${lisp.archive.command}
+
+    # Set up environment
+    @{lisp.environment.commands}
+
+    # Build binary
+    ${lisp.build-command}
+
+    # Install binary
+    ${lisp.install-command}

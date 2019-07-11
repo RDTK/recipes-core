@@ -1,0 +1,14 @@
+variables:
+  lisp.archive.command: |
+    # Install source
+    mkdir -p "${lisp.project-source-dir}"
+    tar                                              \
+      @{lisp.archive.exclude.options}                \
+      -c .                                           \
+      | ( cd "${lisp.project-source-dir}" ; tar -x )
+
+  lisp.build-command: |
+    (
+      flock 9 # Prevent concurrent access to Quicklisp installation
+      ${next-value}
+    ) 9> "${dependency-dir}/share/common-lisp/quicklisp/lock"

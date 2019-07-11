@@ -1,0 +1,159 @@
+templates:
+  - freestyle
+  - base
+
+variables:
+  recipe.maintainer:
+    - Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+  description: >-
+    Steel Bank Common Lisp (SBCL) is a high performance Common Lisp
+    compiler.  It is open source / free software, with a permissive
+    license.
+
+    In addition to the compiler and runtime system for ANSI Common
+    Lisp, it provides an interactive environment including a debugger,
+    a statistical profiler, a code coverage tool, and many other
+    extensions.
+  keywords:
+    - lisp
+    - common lisp
+    - sbcl
+    - steel bank common lisp
+    - compiler
+  license: Public Domain
+  programming-languages:
+    - Common Lisp
+  homepage.url: http://sbcl.org
+  documentation.url: ${homepage.url}/manual
+  bug-tracker.url: https://bugs.launchpad.net/sbcl
+
+  repository: https://git.code.sf.net/p/sbcl/sbcl
+  branches:
+    - master
+  tags:
+    - sbcl-1.3.0
+    - sbcl-1.3.10
+    - sbcl-1.3.11
+    - sbcl-1.3.13
+    - sbcl-1.3.16
+    - sbcl-1.4.0
+    - sbcl-1.4.4
+    - sbcl-1.4.9
+    - sbcl-1.4.10
+    - sbcl-1.4.11
+    - sbcl-1.4.12
+    - sbcl-1.4.13
+    - sbcl-1.4.14
+    - sbcl-1.4.15
+
+  host-compiler: sbcl
+
+  extra-requires:
+    - nature: program
+      target: git
+    - nature: program
+      target: gcc
+    - nature: program@build
+      target: ${host-compiler}
+    - nature: program
+      target: make
+    - nature: program
+      target: time
+    - nature: library
+      target: libz
+    - '@{next-value|[]}'
+
+  extra-provides:
+    - nature: program
+      target: sbcl
+      version: ${version-name}
+    - nature: meta
+      target: common-lisp-compiler
+    - '@{next-value|[]}'
+
+  sbcl.host-compiler: ${host-compiler} --no-sysinit --no-userinit
+
+  sbcl.options:default:
+    - --fancy
+  sbcl.options: ${sbcl.options:${mode}|${sbcl.options:default}}
+  sbcl.option-lines: |2
+      ${sbcl.options} \
+
+  sbcl.features.enable: []
+  sbcl.features.enable-lines: |2
+      --with${sbcl.features.enable|[]} \
+  sbcl.features.disable: []
+  sbcl.features.disable-lines: |2
+      --without${sbcl.features.disable|[]} \
+
+  sbcl.parallel.process-count: ${next-value|${make.threads|}}
+  sbcl.parallel.make.export:
+    - export SBCL_MAKE_JOBS
+  sbcl.parallel.make.line: |
+    ${sbcl.parallel.make.export}='-j ${sbcl.parallel.process-count|}'
+  sbcl.parallel.jobs.export:
+    - export SBCL_MAKE_PARALLEL
+  sbcl.parallel.jobs.line: |
+    ${sbcl.parallel.jobs.export}=${sbcl.parallel.process-count|}
+
+  sbcl.compile-command.minimal: |
+    export GNUMAKE="${make.binary|make}"
+
+    @{sbcl.parallel.make.line}@{sbcl.parallel.jobs.line}
+    sh make.sh \
+      --xc-host="${sbcl.host-compiler}" \
+    @{sbcl.option-lines}@{sbcl.features.enable-lines}@{sbcl.features.disable-lines}
+  sbcl.compile-command.doc: |
+    ${sbcl.compile-command.minimal}
+    ( cd doc/manual && make )
+  sbcl.compile-command: ${sbcl.compile-command.minimal}
+
+  sbcl.options:toolkit:
+    - '@{sbcl.options:default}'
+    - --prefix=${toolkit.dir}
+  sbcl.options:ci-deploy: ${sbcl.options:toolkit}
+
+  shell.command: |
+    ${sbcl.compile-command}
+
+    sh install.sh
+  archive-name: sbcl.tar.gz
+  sbcl.options:ci:
+  - '@{sbcl.options:default}'
+  shell.command:ci: |
+    ${sbcl.compile-command}
+
+    # later ( cd tests && sh run-tests.sh )
+
+    INSTALL_ROOT="\$(pwd)/install" sh install.sh
+    tar -czf ${archive-name} install/
+
+  deployment.test: |
+    ${toolkit.dir}/bin/sbcl --version
+    ${toolkit.dir}/bin/sbcl --noinform --disable-debugger --no-userinit --eval '(require :sb-sprof)' --quit
+
+  tasks.patterns:
+    - '**/*.lisp'
+    - '**/*.asd'
+    - '**/*.c'
+    - '**/*.c'
+    - '**/*Makefile'
+    - '**/*.sh'
+
+  archive-pattern: ${archive-name}
+
+versions:
+  - pattern: '^sbcl-[0-9]+\.[0-9]+\.[0-9]+$'
+    variables:
+      tag: ${match:0}
+
+  - pattern: '^(sbcl-[0-9]+\.[0-9]+\.[0-9]+)-with-doc$'
+    variables:
+      tag: ${match:1}
+      extra-requires:
+        - nature: program
+          target: makeinfo
+        - nature: program
+          target: pdflatex
+        - '@{next-value|[]}'
+      sbcl.compile-command: ${sbcl.compile-command.doc}

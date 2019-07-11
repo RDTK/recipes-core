@@ -1,0 +1,12 @@
+variables:
+  console-ansi-color.enabled: ${next-value|true}
+  console-ansi-color.color-map: ${next-value|xterm}
+
+aspects:
+  - name: console-ansi-color
+    aspect: console-ansi-color
+    conditions:
+      aspect.console-ansi-color.enabled: 'true'
+    variables:
+      aspect.console-ansi-color.enabled: ${console-ansi-color.enabled}
+      aspect.console-ansi-color.color-map: ${console-ansi-color.color-map}

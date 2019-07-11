@@ -1,0 +1,17 @@
+variables:
+  extra-requires:
+    - nature: program
+      target: make
+    - '@{next-value|[]}'
+
+  tasks.patterns:
+    - '**/Makefile'
+    - '**/GNUMakefile'
+    - '**/*.make'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - make
+    - '@{next-value|[]}'
+
+  make.binary: make

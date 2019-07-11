@@ -1,0 +1,59 @@
+inherit:
+  - slave-defaults
+
+variables:
+  run-hook-function:
+    - runHook
+  run-prepare: ${run-hook-function}("Running prepare hook job", "${prepare-hook-name|}")
+  run-finish: ${run-hook-function}("Running finish hook job", "${finish-hook-name|}")
+
+aspects:
+  - name: orchestration-hook.parameters
+    aspect: parameters
+    conditions:
+      job.tags: orchestration-hook
+      orchestration.hook.parameters: .*
+    variables:
+      aspect.parameters.parameters: ${orchestration.hook.parameters}
+
+  - name: orchestration-hook.shell
+    aspect: shell
+    conditions:
+      job.tags: unix
+    variables:
+      aspect.shell.command: ${orchestration-hook.command}
+
+jobs:
+  - name: prepare-hook/unix
+    conditions:
+      prepare-hook-name: .*
+      prepare-hook/unix: .*
+    variables:
+      job.tags:
+        - orchestration-hook
+        - unix
+        - linux
+      build-job.kind: project
+      build-job.name: ${prepare-hook-name}
+      build-job.description: >-
+        Prepare hook for the ${distribution-name} distribution
+
+        ${description.generated}
+      orchestration-hook.command: ${prepare-hook/unix}
+
+  - name: finish-hook/unix
+    conditions:
+      finish-hook-name: .*
+      finish-hook/unix: .*
+    variables:
+      job.tags:
+        - orchestration-hook
+        - unix
+        - linux
+      build-job.kind: project
+      build-job.name: ${finish-hook-name}
+      build-job.description: >-
+        Finish hook for the ${distribution-name} distribution
+
+        ${description.generated}
+      orchestration-hook.command: ${finish-hook/unix}

@@ -1,0 +1,21 @@
+variables:
+  gitlab.instance-url: https://gitlab.com
+
+  gitlab.project: ${project-name}
+  gitlab.project-url: ${gitlab.instance-url}/${gitlab.group|}/${gitlab.project|}
+
+  repository: ${next-value|${gitlab.project-url}.git}
+
+  homepage.url: ${gitlab.project-url}
+  wiki.url: ${gitlab.project-url}/wikis
+  scm-browser.url: ${gitlab.project-url}/tree/${branch|master}
+  bug-tracker.url: ${gitlab.project-url}/issues
+
+aspects:
+  - name: forge/gitlab.git-repository-browser
+    aspect: git-repository-browser
+    conditions:
+      scm: git
+    variables:
+      aspect.git-repository-browser.kind: gitlab
+      aspect.git-repository-browser.url: ${gitlab.project-url|}

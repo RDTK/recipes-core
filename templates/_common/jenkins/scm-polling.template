@@ -1,0 +1,12 @@
+variables:
+  scm-polling.enabled: 'true' # TODO
+  scm-polling.trigger-spec: ${next-value|H/15 * * * *}
+
+aspects:
+  - name: jenkins/scm-polling.trigger/scm
+    aspect: trigger/scm
+    conditions:
+      scm-polling.enabled: 'true' # TODO
+      scm: git|svn
+    variables:
+      aspect.trigger/scm.spec: ${scm-polling.trigger-spec}

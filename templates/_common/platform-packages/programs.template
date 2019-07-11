@@ -1,0 +1,751 @@
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  # Core
+
+  - name: program-coreutils
+    variables:
+      extra-provides:
+      - nature: program
+        target: uname
+      platform-requires:
+        ubuntu:
+          packages:
+          - coreutils
+
+  - name: program-grep
+    variables:
+      extra-provides:
+      - nature: program
+        target: grep
+      platform-requires:
+        ubuntu:
+          packages:
+          - grep
+
+  - name: program-lsb_release
+    variables:
+      extra-provides:
+      - nature: program
+        target: lsb_release
+      platform-requires:
+        ubuntu:
+          packages:
+          - lsb-release
+
+  - name: program-sh
+    variables:
+      extra-provides:
+      - nature: program
+        target: sh
+      platform-requires:
+        ubuntu:
+          packages:
+          - dash
+
+  # Version control
+
+  - name: program-git
+    variables:
+      extra-provides:
+      - nature: program
+        target: git
+      - nature: cmake
+        target: git
+      platform-requires:
+        ubuntu:
+          packages:
+          - git
+
+  - name: program-subversion
+    variables:
+      extra-provides:
+      - nature: program
+        target: svn
+      platform-requires:
+        ubuntu:
+          packages:
+          - subversion
+
+  - name: program-mercurial
+    variables:
+      extra-provides:
+      - nature: program
+        target: hg
+      platform-requires:
+        ubuntu:
+          packages:
+          - mercurial
+
+  - name: program-wget
+    variables:
+      extra-provides:
+      - nature: program
+        target: wget
+      platform-requires:
+        ubuntu:
+          packages:
+          - wget
+
+  - name: program-curl
+    variables:
+      extra-provides:
+      - nature: program
+        target: curl
+      platform-requires:
+        ubuntu:
+          packages:
+          - curl
+
+  # Archives
+
+  - name: program-unzip
+    variables:
+      extra-provides:
+      - nature: program
+        target: unzip
+      platform-requires:
+        ubuntu:
+          packages:
+          - unzip
+
+  - name: program-unp
+    variables:
+      extra-provides:
+      - nature: program
+        target: unp
+      platform-requires:
+        ubuntu:
+          packages:
+          - unp
+
+  - name: program-tar
+    variables:
+      extra-provides:
+      - nature: program
+        target: tar
+      platform-requires:
+        ubuntu:
+          packages:
+          - tar
+
+  - name: program-bzip2
+    variables:
+      extra-provides:
+      - nature: program
+        target: bzip2
+      platform-requires:
+        ubuntu:
+          packages:
+          - bzip2
+
+  - name: program-gzip
+    variables:
+      extra-provides:
+      - nature: program
+        target: gzip
+      platform-requires:
+        ubuntu:
+          packages:
+          - gzip
+
+  # Packaging
+
+  - name: program-lintian
+    variables:
+      extra-provides:
+      - nature: program
+        target: lintian
+      platform-requires:
+        ubuntu:
+          packages:
+          - lintian
+
+  - name: program-dpkg
+    variables:
+      extra-provides:
+      - nature: program
+        target: dpkg
+      platform-requires:
+        ubuntu:
+          packages:
+          - dpkg
+
+  # Interpreters
+
+  - name: program-python2
+    variables:
+      extra-provides:
+      - nature: program
+        target: python
+      - nature: program
+        target: python2
+      platform-requires:
+        ubuntu:
+          packages:
+          - python
+
+  - name: program-python2.3
+    variables:
+      extra-provides:
+      - nature: program
+        target: python2.3
+      platform-requires:
+        ubuntu:
+          packages:
+          - python2.3
+
+  - name: program-python2.6
+    variables:
+      extra-provides:
+      - nature: program
+        target: python2.6
+      platform-requires:
+        ubuntu:
+          packages:
+          - python2.6
+
+  - name: program-python3
+    variables:
+      extra-provides:
+      - nature: program
+        target: python3
+      platform-requires:
+        ubuntu:
+          packages:
+          - python3
+
+  - name: program-cython
+    variables:
+      extra-provides:
+      - nature: program
+        target: cython
+      platform-requires:
+        ubuntu:
+          packages:
+          - cython
+
+  - name: program-ipython
+    variables:
+      extra-provides:
+      - nature: program
+        target: ipython
+      platform-requires:
+        ubuntu:
+          packages:
+          - ipython
+
+  - name: program-ruby
+    variables:
+      extra-provides:
+      - nature: program
+        target: ruby
+      # FindRuby.cmake, included in CMake distribution
+      # This CMake module checks for the program as well as the
+      # library
+      - nature: cmake
+        target: ruby
+      platform-requires:
+        ubuntu:
+          packages:
+          - ruby
+          - ruby-dev
+
+  - name: program-lua51
+    variables:
+      extra-provides:
+      - nature: program
+        target: lua
+      - nature: cmake
+        target: lua51 # FindLua51.cmake, included in CMake distribution
+      platform-requires:
+        ubuntu:
+          packages:
+          - lua5.1
+
+  - name: program-java
+    variables:
+      extra-provides:
+      - nature: program
+        target: java
+        version: '8.0'
+      platform-requires:
+        ubuntu:
+          packages:
+          - openjdk-8-jre-headless
+
+  # Compilers
+
+  - name: program-gcc
+    variables:
+      extra-provides:
+      - nature: program
+        target: gcc
+      - nature: program
+        target: gcov
+      platform-requires:
+        ubuntu:
+          packages:
+          - gcc
+
+  - name: program-g++
+    variables:
+      extra-provides:
+      - nature: program
+        target: g++
+      platform-requires:
+        ubuntu:
+          packages:
+          - g++
+
+  - name: program-gfortran
+    variables:
+      extra-provides:
+      - nature: program
+        target: gfortran
+      platform-requires:
+        ubuntu:
+          packages:
+          - gfortran
+
+  - name: program-clang
+    variables:
+      extra-provides:
+      - nature: program
+        target: clang
+        version: '6.0'
+      platform-requires:
+        ubuntu:
+          xenial:
+            packages:
+            - clang-6.0
+
+  - name: program-sbcl
+    variables:
+      extra-provides:
+      - nature: program
+        target: sbcl
+      - nature: program@build
+        target: sbcl
+      platform-requires:
+        ubuntu:
+          packages:
+          - sbcl
+
+  - name: program-javac
+    variables:
+      extra-provides:
+      - nature: program
+        target: javac
+        version: '8.0'
+      - nature: cmake
+        target: JNI
+      platform-requires:
+        ubuntu:
+          packages:
+          - openjdk-8-jdk-headless
+
+  - name: program-ccache
+    variables:
+      extra-provides:
+      - nature: program
+        target: ccache
+      platform-requires:
+        ubuntu:
+          packages:
+          - ccache
+
+  # Build systems
+
+  - name: program-autoconf
+    variables:
+      extra-provides:
+      - nature: program
+        target: autoconf
+      platform-requires:
+        ubuntu:
+          packages:
+          - autoconf
+
+  - name: program-make
+    variables:
+      extra-provides:
+      - nature: program
+        target: make
+      platform-requires:
+        ubuntu:
+          packages:
+          - make
+
+  - name: program-cmake
+    variables:
+      extra-provides:
+      - nature: program
+        target: cmake
+      platform-requires:
+        ubuntu:
+          packages:
+          - cmake
+
+  - name: program-ant
+    variables:
+      extra-provides:
+      - nature: program
+        target: ant
+      platform-requires:
+        ubuntu:
+          packages:
+          - ant
+
+  - name: program-maven
+    variables:
+      extra-provides:
+      - nature: program
+        target: mvn
+      platform-requires:
+        ubuntu:
+          packages:
+          - maven
+
+  - name: program-meson
+    variables:
+      extra-provides:
+      - nature: program
+        target: meson
+      platform-requires:
+        ubuntu:
+          packages:
+          - meson
+
+  - name: program-ninja
+    variables:
+      extra-provides:
+      - nature: program
+        target: ninja
+      platform-requires:
+        ubuntu:
+          packages:
+          - ninja-build
+
+  # Code checks, reports, formatting
+
+  - name: program-sloccount
+    variables:
+      extra-provides:
+      - nature: program
+        target: sloccount
+      platform-requires:
+        ubuntu:
+          packages:
+          - sloccount
+
+  - name: program-cppcheck
+    variables:
+      extra-provides:
+      - nature: program
+        target: cppcheck
+      platform-requires:
+        ubuntu:
+          packages:
+          - cppcheck
+
+  - name: program-clang-format-6.0
+    variables:
+      extra-provides:
+      - nature: program
+        target: clang-format-6.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - clang-format-6.0
+
+  # Code generators
+
+  - name: program-protocol-buffers-compiler
+    variables:
+      extra-provides:
+      - nature: program
+        target: protoc
+      platform-requires:
+        ubuntu:
+          packages:
+          - protobuf-compiler
+
+  - name: program-flex
+    variables:
+      extra-provides:
+      - nature: program
+        target: flex
+      - nature: cmake
+        target: flex
+      platform-requires:
+        ubuntu:
+          packages:
+          - flex
+
+  - name: program-bison
+    variables:
+      extra-provides:
+      - nature: program
+        target: bison
+      - nature: cmake
+        target: bison
+      platform-requires:
+        ubuntu:
+          packages:
+          - bison
+
+  - name: program-swig
+    variables:
+      extra-provides:
+      - nature: program
+        target: swig
+      - nature: cmake
+        target: swig
+      platform-requires:
+        ubuntu:
+          packages:
+          - swig
+
+  # Documentation tools
+
+  - name: program-doxygen
+    variables:
+      extra-provides:
+      - nature: program
+        target: doxygen
+      - nature: cmake
+        target: doxygen
+      platform-requires:
+        ubuntu:
+          packages:
+          - doxygen
+
+  - name: program-man
+    variables:
+      extra-provides:
+      - nature: program
+        target: man
+      platform-requires:
+        ubuntu:
+          packages:
+          - man-db
+
+  - name: program-sphinx-build
+    variables:
+      extra-provides:
+      - nature: program
+        target: sphinx-build
+      - nature: program
+        target: sphinx-apidoc
+      - nature: cmake
+        target: sphinx
+
+      debianoid-packages:
+      - python-sphinx
+      platform-requires:
+        debian:
+          packages:
+          - python-sphinx # '@{debianoid-packages}'
+        ubuntu:
+          packages:
+          - python-sphinx # '@{debianoid-packages}'
+
+  - name: program-texinfo
+    variables:
+      extra-provides:
+      - nature: program
+        target: texinfo # TODO this doesn't seem to exist
+      - nature: program
+        target: makeinfo
+      platform-requires:
+        ubuntu:
+          packages:
+          - texinfo
+
+  # Other
+
+  - name: program-ronn
+    variables:
+      extra-provides:
+      - nature: program
+        target: ronn
+      platform-requires:
+        ubuntu:
+          packages:
+          - ronn
+
+  - name: program-time
+    variables:
+      extra-provides:
+      - nature: program
+        target: time
+      platform-requires:
+        ubuntu:
+          packages:
+          - time
+
+  - name: program-valgrind
+    variables:
+      extra-provides:
+      - nature: program
+        target: valgrind
+      platform-requires:
+        ubuntu:
+          packages:
+          - valgrind
+
+  - name: program-libtool
+    variables:
+      extra-provides:
+      - nature: program
+        target: libtoolize
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtool
+
+  - name: program-pkg-config
+    variables:
+      extra-provides:
+      - nature: program
+        target: pkg-config
+      - nature: cmake
+        target: PkgConfig
+      platform-requires:
+        ubuntu:
+          packages:
+          - pkg-config
+
+  - name: program-pdflatex
+    variables:
+      extra-provides:
+      - nature: program
+        target: pdflatex
+      platform-requires:
+        ubuntu:
+          packages:
+          - texlive-latex-base
+
+  - name: program-gnuplot
+    variables:
+      extra-provides:
+      - nature: program
+        target: gnuplot
+      platform-requires:
+        ubuntu:
+          packages:
+          - gnuplot-x11
+
+  - name: program-hugo
+    variables:
+      extra-provides:
+      - nature: program
+        target: hugo
+      platform-requires:
+        ubuntu:
+          packages:
+          - hugo
+
+  - name: program-xsdcxx
+    variables:
+      extra-provides:
+      - nature: program
+        target: xsdcxx
+      platform-requires:
+        ubuntu:
+          packages:
+          - xsdcxx
+
+  - name: program-cppad
+    variables:
+      extra-provides:
+      - nature: program
+        target: cppad
+      platform-requires:
+        ubuntu:
+          packages:
+          - cppad
+
+  - name: program-lcov
+    variables:
+      extra-provides:
+      - nature: program
+        target: lcov
+      - nature: cmake
+        target: lcov
+      platform-requires:
+        ubuntu:
+          packages:
+          - lcov
+
+  - name: program-gcovr
+    variables:
+      extra-provides:
+      - nature: program
+        target: gcovr
+      platform-requires:
+        ubuntu:
+          packages:
+          - gcovr
+
+  - name: program-xsltproc
+    variables:
+      extra-provides:
+      - nature: program
+        target: xsltproc
+      platform-requires:
+        ubuntu:
+          packages:
+          - xsltproc
+
+  - name: program-libxml2-utils
+    variables:
+      extra-provides:
+      - nature: program
+        target: xmllint
+      platform-requires:
+        ubuntu:
+          packages:
+          - libxml2-utils
+
+  - name: program-gst-launch-0.10
+    variables:
+      extra-provides:
+      - nature: program
+        target: gst-launch-0.10
+      platform-requires:
+        ubuntu:
+          packages:
+          - gstreamer0.10-tools
+
+  - name: program-gst-launch-1.0
+    variables:
+      extra-provides:
+      - nature: program
+        target: gst-launch-1.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - gstreamer1.0-tools
+
+  - name: program-sox
+    variables:
+      extra-provides:
+      - nature: program
+        target: sox
+      platform-requires:
+        ubuntu:
+          packages:
+          - sox
+
+  - name: program-mpirun
+    variables:
+      extra-provides:
+      - nature: program
+        target: mpirun
+      platform-requires:
+        ubuntu:
+          packages:
+          - mpi-default-bin

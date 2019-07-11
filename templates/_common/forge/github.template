@@ -1,0 +1,27 @@
+variables:
+  github.url: https://github.com
+
+  github.project: ${project-name}
+  github.project-url: ${github.url}/${github.user|}/${github.project|}
+
+  repository: ${next-value|${github.url}/${github.user}/${github.project}.git}
+
+  homepage.url: ${github.project-url}
+  wiki.url: ${github.project-url}/wiki
+  scm-browser.url: ${github.project-url}
+  bug-tracker.url: ${github.project-url}/issues
+
+aspects:
+  - name: forge/github.github
+    aspect: github
+    variables:
+      aspect.github.project-url: ${github.project-url}
+      aspect.github.display-name: ${github.display-name|}
+
+  - name: forge/github.git-repository-browser
+    aspect: git-repository-browser
+    conditions:
+      scm: git
+    variables:
+      aspect.git-repository-browser.kind: github-web
+      aspect.git-repository-browser.url: ${github.project-url|}

@@ -1,0 +1,19 @@
+variables:
+  natures:
+    - autotools
+    - '@{next-value|[]}'
+
+  extra-requires:
+    - nature: program
+      target: autoconf
+    - nature: m4-macro
+      target: ax_afs
+    - nature: program
+      target: libtoolize
+    - nature: program
+      target: pkg-config
+    - '@{next-value|[]}'
+
+  task.patterns:
+    - configure.ac
+    - '@{next-value|[]}'

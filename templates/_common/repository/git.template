@@ -1,0 +1,33 @@
+variables:
+  git.local-branch: ${next-value|${tag|${branch|}}}
+  git.wipe-out-workspace?: ${next-value|false}
+  git.clean-before-checkout?: ${next-value|true}
+
+  extra-requires:
+    # - '@(if $(equal ${scm} git)
+    - nature: program
+      target: git
+    #    )'
+    - '@{next-value|[]}'
+
+aspects:
+  - name: git.repository
+    aspect: git
+    conditions:
+      scm: git
+    variables:
+      aspect.builder-constraints.git:
+        - [ before, { type: <all> } ]
+
+      aspect.git.url: ${repository}
+      aspect.git.branches:
+        - ${commit|${tag|${branch}}}
+      aspect.git.local-branch: ${git.local-branch}
+      aspect.git.username: ${scm.username|}
+      aspect.git.password: ${scm.password|}
+      aspect.git.credentials: ${scm.credentials|}
+      aspect.git.clone-timeout: ${git.clone-timeout|}
+      aspect.git.wipe-out-workspace?: ${git.wipe-out-workspace?}
+      aspect.git.clean-before-checkout?: ${git.clean-before-checkout?}
+      aspect.git.checkout-submodules?: ${git.checkout-submodules?|}
+      aspect.git.shallow?: ${git.shallow?|}

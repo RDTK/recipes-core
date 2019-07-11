@@ -1,0 +1,7 @@
+inherit:
+  - cmake-base
+
+  - language/cpp
+
+  - platform-packages/programs
+  - platform-packages/libraries

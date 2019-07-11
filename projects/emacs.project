@@ -1,0 +1,90 @@
+templates:
+  - autotools-c
+  - base
+
+variables:
+  description: >-
+    GNU Emacs text editor
+  keywords:
+    - editor
+    - lisp
+    - gnu
+    - free software
+
+  homepage.url: https://www.gnu.org/software/emacs/
+  documentation.url: https://www.gnu.org/software/emacs/documentation.html
+  scm-browser.url: https://git.savannah.gnu.org/cgit/emacs.git/
+  bug-tracker.url: http://debbugs.gnu.org/
+
+  repository: https://git.savannah.gnu.org/git/emacs.git/
+  branches:
+    - master
+
+  extra-requires:
+    - nature: library
+      target: png
+    - nature: library
+      target: xpm
+    - nature: library
+      target: jpeg
+    - nature: library
+      target: gif
+    - nature: library
+      target: tiff
+    - nature: library
+      target: rsvg
+
+    - nature: library
+      target: ncurses
+
+    - nature: library
+      target: gnutls
+
+    - nature: library
+      target: dbus
+    - nature: library
+      target: gconf
+
+    - nature: program
+      target: makeinfo
+
+    - '@{next-value|[]}'
+
+  bootstrap.command: |
+    ./autogen.sh
+
+  # !b!version(0.30.5) bootstrap.command: |
+  #   ./autogen.sh
+  #
+  # !b!version(0.30.2) bootstrap.command: |
+  #   ./autogen-30.2.sh
+  #
+  # !b!version(1.3.3) bootstrap.command: |
+  #   ./autogen.sh
+  #
+  # !b!version(1.5) bootstrap.command: |
+  #   ./autogen.sh
+
+  configure.with:
+    - xft
+    - gif
+    - imagemagick
+    - modules
+    - '@{next-value|[]}'
+
+versions:
+  - pattern: '^(.*)-gtk$'
+    variables:
+      branch: ${match:1}
+
+      extra-requires:
+        - nature: pkg-config
+          target: gtk+-3.0
+        - nature: pkg-config
+          target: webkit2gtk-4.0
+        - '@{next-value|[]}'
+
+      configure.with:
+        - x-toolkit=gtk
+        - xwidgets
+        - '@{next-value|[]}'

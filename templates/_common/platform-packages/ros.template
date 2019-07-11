@@ -1,0 +1,102 @@
+# The features of nature "cmake" listed in this template are provided
+# the ROS packages.
+
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: ros-rostest
+    variables:
+      extra-provides:
+      - nature: program
+        target: rostest
+      - nature: pkg-config
+        target: rostest
+      - nature: cmake
+        target: rostest
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-rostest
+
+  - name: ros-roscpp
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: roscpp
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-roscpp
+
+  - name: ros-message_generation
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: message_generation
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-message-generation
+
+  - name: ros-lint
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: roslint
+      - nature: pkg-config
+        target: roslint
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-roslint
+
+  - name: ros-dynamic-reconfigure
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: dynamic_reconfigure
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-dynamic-reconfigure
+
+  - name: ros-tf
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: tf
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-tf
+
+  - name: ros-std-msgs
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: std_msgs
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-std-msgs
+
+  - name: ros-control-msgs
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: control_msgs
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-control-msgs
+
+  - name: ros-actionlib-msgs
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: actionlib_msgs
+      platform-requires:
+        ubuntu:
+          packages:
+          - ros-${ros}-actionlib-msgs

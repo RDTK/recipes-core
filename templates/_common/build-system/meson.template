@@ -1,0 +1,15 @@
+variables:
+  natures:
+    # - meson
+    - '@{next-value|[]}'
+
+  extra-requires:
+    - nature: program
+      target: meson
+    - nature: program
+      target: ninja
+    - '@{next-value|[]}'
+
+  tasks.patterns:
+    - '**/meson.build'
+    - '@{next-value|[]}'

@@ -1,0 +1,24 @@
+# This template controls basic aspects of generated Jenkins jobs
+
+variables:
+  build-job.kind: ${next-value|${build-job.kind:default}}
+  build-job.kind:default: project
+
+  build-job.name: ${next-value|${build-job.name:default}}
+  build-job.name:default: ${project-name}-${version-name}-${mode}-${distribution-name}
+
+  build-job.disabled?: ${next-value|true}
+
+  build-job.tags:
+    - ${mode}
+    - '@{natures|[]}'
+    - '@{next-value|[]}'
+
+jobs:
+  - name: main
+    variables:
+      job.tags:
+        - architecture-dependent
+        - unix
+        - linux
+        - '@{build-job.tags|[]}'

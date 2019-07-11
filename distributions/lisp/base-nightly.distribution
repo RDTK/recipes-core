@@ -1,0 +1,4 @@
+versions:
+  - sbcl                            @master
+  - cl-launch                       @master
+  - quicklisp                       @current

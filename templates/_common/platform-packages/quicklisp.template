@@ -1,0 +1,216 @@
+# The features of nature "asdf" listed in this template are provided by
+# the Quicklisp package manager for Common Lisp projects.
+#
+# Since these packages will be installed into project workspaces
+# automatically when they appear as dependencies, we just list them as
+# "provided" here without specifying system packages to install.
+
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: common-lisp-quicklisp
+    variables:
+      extra-provides:
+      - nature: asdf
+        target: architecture.builder-protocol
+        version: 99.99.99
+      - nature: asdf
+        target: architecture.builder-protocol.json
+        version: 99.99.99
+      - nature: asdf
+        target: architecture.builder-protocol.universal-builder
+        version: 99.99.99
+      - nature: asdf
+        target: architecture.builder-protocol.xpath
+        version: 99.99.99
+
+      - nature: asdf
+        target: architecture.service-provider
+        version: 99.99.99
+
+      - nature: asdf
+        target: alexandria
+        version: 99.99.99
+      - nature: asdf
+        target: archive
+        version: 99.99.99
+      - nature: asdf
+        target: asdf
+        version: 99.99.99
+      - nature: asdf
+        target: babel
+        version: 99.99.99
+      - nature: asdf
+        target: bordeaux-threads
+        version: 99.99.99
+      - nature: asdf
+        target: cffi
+        version: 99.99.99
+      - nature: asdf
+        target: cl-dot
+        version: 99.99.99
+      - nature: asdf
+        target: cl-hooks
+        version: 99.99.99
+      - nature: asdf
+        target: cl-interpol
+        version: 99.99.99
+      - nature: asdf
+        target: cl-json
+        version: 99.99.99
+      - nature: asdf
+        target: cl-ppcre
+        version: 99.99.99
+      - nature: asdf
+        target: cl-store
+        version: 99.99.99
+      - nature: asdf
+        target: cl-who
+        version: 99.99.99
+      - nature: asdf
+        target: closer-mop
+        version: 99.99.99
+      - nature: asdf
+        target: clouseau
+        version: 99.99.99
+
+      - nature: asdf
+        target: configuration.options
+        version: 99.99.99
+      - nature: asdf
+        target: configuration.options-and-puri
+        version: 99.99.99
+      - nature: asdf
+        target: configuration.options-and-service-provider
+        version: 99.99.99
+      - nature: asdf
+        target: configuration.options-syntax-ini
+        version: 99.99.99
+
+      - nature: asdf
+        target: cxml-rpc
+        version: 99.99.99
+      - nature: asdf
+        target: cxml-stp
+        version: 99.99.99
+      - nature: asdf
+        target: drakma
+        version: 99.99.99
+      - nature: asdf
+        target: esrap
+        version: 99.99.99
+      - nature: asdf
+        target: fiveam
+        version: 99.99.99
+      - nature: asdf
+        target: flexi-streams
+        version: 99.99.99
+      - nature: asdf
+        target: hunchentoot
+        version: 99.99.99
+      - nature: asdf
+        target: inferior-shell
+        version: 99.99.99
+      - nature: asdf
+        target: ironclad
+        version: 99.99.99
+      - nature: asdf
+        target: iterate
+        version: 99.99.99
+      - nature: asdf
+        target: let-plus
+        version: 99.99.99
+      - nature: asdf
+        target: lift
+        version: 99.99.99
+      - nature: asdf
+        target: local-time
+        version: 99.99.99
+      - nature: asdf
+        target: log4cl
+        version: 99.99.99
+      - nature: asdf
+        target: lparallel
+        version: 99.99.99
+      - nature: asdf
+        target: mcclim
+        version: 99.99.99
+      - nature: asdf
+        target: metabang-bind
+        version: 99.99.99
+      - nature: asdf
+        target: more-conditions
+        version: 99.99.99
+      - nature: asdf
+        target: named-readtables
+        version: 99.99.99
+      - nature: asdf
+        target: net.didierverna.clon
+        version: 99.99.99
+      - nature: asdf
+        target: nibbles
+        version: 99.99.99
+      - nature: asdf
+        target: optima
+        version: 99.99.99
+      - nature: asdf
+        target: parser.common-rules
+        version: 99.99.99
+      - nature: asdf
+        target: parser.common-rules/test
+        version: 99.99.99
+      - nature: asdf
+        target: parser.ini
+        version: 99.99.99
+      - nature: asdf
+        target: pileup
+        version: 99.99.99
+      - nature: asdf
+        target: puri
+        version: 99.99.99
+      - nature: asdf
+        target: quri
+        version: 99.99.99
+      - nature: asdf
+        target: split-sequence
+        version: 99.99.99
+      - nature: asdf
+        target: trivial-garbage
+        version: 99.99.99
+      - nature: asdf
+        target: uiop
+        version: 99.99.99
+      - nature: asdf
+        target: usocket
+        version: 99.99.99
+      - nature: asdf
+        target: utilities.binary-dump
+        version: 99.99.99
+      - nature: asdf
+        target: utilities.print-items
+        version: 99.99.99
+      - nature: asdf
+        target: utilities.print-tree
+        version: 99.99.99
+      - nature: asdf
+        target: uuid
+        version: 99.99.99
+      - nature: asdf
+        target: xml.location
+        version: 99.99.99
+      - nature: asdf
+        target: xml.location-and-local-time
+        version: 99.99.99
+      - nature: asdf
+        target: xpath
+        version: 99.99.99
+      - nature: asdf
+        target: yacc
+        version: 99.99.99
+      - nature: asdf
+        target: zip
+        version: 99.99.99
+      - nature: asdf
+        target: zpng
+        version: 99.99.99

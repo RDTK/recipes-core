@@ -1,0 +1,1017 @@
+variables:
+  platform-provides:
+  - '@{next-value|[]}'
+
+  - name: library-m
+    variables:
+      extra-provides:
+      - nature: library
+        target: m
+      platform-requires:
+        ubuntu:
+          packages:
+          - libc6-dev
+
+  - name: library-gmp
+    variables:
+      extra-provides:
+      - nature: library
+        target: gmp
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgmp-dev
+
+  - name: library-clang
+    variables:
+      extra-provides:
+      - nature: library
+        target: clang
+        version: '6.0'
+      platform-requires:
+        ubuntu:
+          packages:
+          - libclang-6.0-dev
+
+  # Autoconf macro library
+  - name: m4-macros-autoconf-archive
+    variables:
+      extra-provides:
+      - nature: m4-macro
+        target: ax_afs
+      platform-requires:
+        ubuntu:
+          packages:
+          - autoconf-archive
+
+  # CMake module - no actual package installation necessary?
+  - name: cmake-threads
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: Threads
+
+  - name: library-protocol-buffers-c++
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: ProtocolBuffers
+      - nature: cmake
+        target: ProtoBuf
+      platform-requires:
+        ubuntu:
+          packages:
+          - libprotobuf-dev
+
+  - name: library-boost
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: boost
+        version: '1.55'
+      platform-requires:
+        ubuntu:
+          packages:
+          - libboost-date-time-dev
+          - libboost-filesystem-dev
+          - libboost-program-options-dev
+          - libboost-regex-dev
+          - libboost-signals-dev
+          - libboost-system-dev
+          - libboost-regex-dev
+          - libboost-thread-dev
+          - libboost-iostreams-dev
+
+  - name: library-gc
+    variables:
+      extra-provides:
+      - nature: library
+        target: gc
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgc-dev
+
+  - name: library-bsd
+    variables:
+      extra-provides:
+      - nature: library
+        target: bsd
+      platform-requires:
+        ubuntu:
+          packages:
+          - libbsd-dev
+
+
+  - name: library-zlib
+    variables:
+      extra-provides:
+      - nature: library
+        target: libz
+      - nature: cmake
+        target: ZLIB
+        version: 1.2.11
+      platform-requires:
+        ubuntu:
+          packages:
+          - zlib1g-dev
+
+  - name: library-bzip2
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: BZip2
+      platform-requires:
+        ubuntu:
+          packages:
+          - libbz2-dev
+
+  - name: library-lzma
+    variables:
+      extra-provides:
+      - nature: library
+        target: lzma
+      - nature: cmake
+        target: liblzma
+      platform-requires:
+        ubuntu:
+          packages:
+          - liblzma-dev
+
+  - name: library-elf
+    variables:
+      extra-provides:
+      - nature: library
+        target: elf
+      platform-requires:
+        ubuntu:
+          packages:
+          - libelf-dev
+
+  - name: library-pcap
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: PCAP
+      platform-requires:
+        ubuntu:
+          packages:
+          - libpcap-dev
+
+  - name: library-eigen3 # TODO
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: eigen3
+        version: 3.99.99
+      - nature: pkg-config
+        target: eigen3
+      # Some Orocos-related projects spell the feature the following
+      # way. I (jmoringe) believe this is incorrect and only work
+      # because the projects in question provide their own fallback
+      # CMake module.
+      - nature: cmake
+        target: eigen
+        version: 3.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libeigen3-dev
+
+  - name: library-lapack
+    variables:
+      extra-provides:
+      - nature: library
+        target: lapack
+      platform-requires:
+        ubuntu:
+          packages:
+          - liblapack-dev
+
+  - name: library-openblas
+    variables:
+      extra-provides:
+      - nature: library
+        target: openblas
+      platform-requires:
+        ubuntu:
+          packages:
+          - libopenblas-dev
+
+  - name: library-blas
+    variables:
+      extra-provides:
+      - nature: library
+        target: blas
+      platform-requires:
+        ubuntu:
+          packages:
+          - libblas-dev
+
+
+  - name: library-opencv
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: OpenCV
+        version: '3.0'
+      platform-requires:
+        ubuntu:
+          packages:
+          - libopencv-core-dev
+          - libopencv-highgui-dev
+          - libopencv-imgproc-dev
+          - libopencv-video-dev
+          - libopencv-calib3d-dev
+
+  - name: library-python-interpreter-2-7
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: PythonInterp
+        version: '2.7'
+      platform-requires:
+        ubuntu:
+          packages:
+          - python2.7
+
+  - name: library-python-interpreter-3-0
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: PythonInterp
+        version: '3.0'
+      platform-requires:
+        ubuntu:
+          packages:
+          - python3.0
+
+  - name: library-python
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: PythonLibs
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libpython-dev
+
+  - name: library-x11
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: X11
+      platform-requires:
+        ubuntu:
+          packages:
+          - libx11-dev
+
+  - name: library-qt5
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: Qt5
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Core
+        version: '5.99'
+      - nature: cmake
+        target: Qt5OpenGL
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Concurrent
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Test
+        version: '5.99'
+      platform-requires:
+        ubuntu:
+          packages:
+          - qtbase5-dev
+          # - libqt5core-dev
+          # - libqt5concurrent-dev
+
+  - name: library-qt5-extra
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: Qt5Gui
+        version: '5.99' # TODO ubuntu:xenial actually only has 5.5.1
+      - nature: cmake
+        target: Qt5Widgets
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Qml
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Quick
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Svg
+        version: '5.99'
+      - nature: cmake
+        target: Qt5Positioning
+        version: '5.99'
+      - nature: cmake
+        target: Qt5LinguistTools
+        version: '5.99'
+      platform-requires:
+        ubuntu:
+          packages:
+          - qt5-default
+          - qtdeclarative5-dev
+          - libqt5svg5-dev
+          - qtlocation5-dev
+          - qtpositioning5-dev
+          - qttools5-dev-tools
+          - qttools5-dev
+
+  - name: library-sdl
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: SDL
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libsdl1.2-dev
+
+  - name: library-curses
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: curses
+        version: 99.99.99
+      - nature: pkg-config
+        target: ncurses
+      - nature: library
+        target: ncurses
+      platform-requires:
+        ubuntu:
+          packages:
+          - libncurses-dev
+
+  - name: library-ffmpeg
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: FFMPEG
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libffmpeg-dev
+
+  - name: library-gsl
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: gsl
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgsl-dev
+
+  - name: library-yaml-c++
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: yamlcpp
+        version: 99.99.99
+      - nature: pkg-config
+        target: yaml-cpp
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libyaml-cpp-dev
+
+  - name: libary-xqilla
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: xqilla
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libxqilla-dev
+
+  - name: library-libusb-1-0 # TODO
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: libusb-1.0
+      - nature: cmake
+        target: libusb
+      platform-requires:
+        ubuntu:
+          packages:
+          - libusb-1.0-dev
+
+  - name: library-xpm
+    variables:
+      extra-provides:
+      - nature: library
+        target: xpm
+      platform-requires:
+        ubuntu:
+          packages:
+          - libxpm-dev
+
+  - name: library-png
+    variables:
+      extra-provides:
+      - nature: library
+        target: png
+      - nature: cmake
+        target: png
+      platform-requires:
+        ubuntu:
+          packages:
+          - libpng-dev
+
+  - name: library-jpeg
+    variables:
+      extra-provides:
+      - nature: library
+        target: jpeg
+      - nature: cmake
+        target: jpeg
+      platform-requires:
+        ubuntu:
+          packages:
+          - libjpeg-dev
+
+  - name: library-gif
+    variables:
+      extra-provides:
+      - nature: library
+        target: gif
+      - nature: cmake
+        target: gif
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgif-dev
+
+  - name: library-tiff
+    variables:
+      extra-provides:
+      - nature: library
+        target: tiff
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtiff-dev
+
+  - name: library-rsvg
+    variables:
+      extra-provides:
+      - nature: library
+        target: rsvg
+      platform-requires:
+        ubuntu:
+          packages:
+          - librsvg2-dev
+
+  - name: library-sdl-image
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: sdl_image
+      platform-requires:
+        ubuntu:
+          packages:
+          - libsdl-image1.2-dev
+
+  - name: library-opengl
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: opengl
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgl-dev
+
+  - name: library-glew
+    variables:
+      extra-provides:
+      - nature: library
+        target: glew
+      - nature: cmake
+        target: glew
+      platform-requires:
+        ubuntu:
+          packages:
+          - libglew-dev
+
+  - name: library-glfw
+    variables:
+      extra-provides:
+      - nature: library
+        target: glfw
+      - nature: cmake
+        target: glfw
+      platform-requires:
+        ubuntu:
+          packages:
+          - libglfw3-dev
+
+  - name: library-freeglut3
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: freeglut3
+      platform-requires:
+        ubuntu:
+          packages:
+          - freeglut3-dev
+
+  - name: library-gtk-3-0
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: gtk+-3.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgtk-3-dev
+
+  - name: library-webkit2gtk-4.0
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: webkit2gtk-4.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - libwebkit2gtk-4.0-dev
+
+  - name: library-tinyxml
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: tinyxml
+        version: 99.99.99
+      - nature: pkg-config
+        target: tinyxml
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtinyxml-dev
+
+  - name: library-tinyxml
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: tinyxml2
+        version: 99.99.99
+      - nature: pkg-config
+        target: tinyxml2
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtinyxml2-dev
+
+  - name: library-bullet3
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: bullet
+        version: '3'
+      platform-requires:
+        ubuntu:
+          packages:
+          - libbullet-dev
+
+  - name: library-bullet2
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: bullet
+        version: '2.82'
+      - nature: pkg-config
+        target: bullet2.82
+        version: '2.82'
+      platform-requires:
+        ubuntu:
+          packages:
+          - libbullet-dev
+
+  - name: library-curl
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: curl
+      - nature: pkg-config
+        target: libcurl
+      platform-requires:
+        ubuntu:
+          packages:
+          - libcurl4-openssl-dev
+
+  - name: library-tcmalloc
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: libtcmalloc
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtcmalloc-minimal4
+
+  - name: library-tbb
+    variables:
+      extra-provides:
+      - nature: library
+        target: tbb
+      - nature: pkg-config
+        target: tbb
+      - nature: cmake
+        target: tbb
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtbb-dev
+
+  - name: library-ccd
+    variables:
+      extra-provides:
+      - nature: library
+        target: ccd
+      - nature: cmake
+        target: ccd
+        version: 99.99.99
+      - nature: pkg-config
+        target: ccd
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libccd-dev
+
+  - name: library-gts
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: gts
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgts-dev
+
+  - name: library-uuid
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: uuid
+      - nature: pkg-config
+        target: uuid
+      platform-requires:
+        ubuntu:
+          packages:
+          - libuuid-dev
+
+  - name: library-fcl
+    variables:
+      extra-provides:
+      - nature: library
+        target: fcl
+      - nature: cmake
+        target: fcl
+        version: 99.99.99
+      - nature: pkg-config
+        target: fcl
+      platform-requires:
+        ubuntu:
+          packages:
+          - libfcl-dev
+
+  - name: library-assimp
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: assimp
+        version: 99.99.99
+      - nature: pkg-config
+        target: assimp
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libassimp-dev
+
+  - name: library-xml2
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: libxml2
+        version: 2.9.4
+      - nature: pkg-config
+        target: libxml-2.0
+      - nature: pkg-config
+        target: libxml2
+      - nature: pkg-config
+        target: libxml
+        version: 2.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libxml2-dev
+
+  - name: library-xerces
+    variables:
+      extra-provides:
+      - nature: library
+        target: xerces-c
+      - nature: cmake
+        target: xerces
+      - nature: pkg-config
+        target: xerces-c
+      platform-requires:
+        ubuntu:
+          packages:
+          - libxerces-c-dev
+
+  - name: library-ao
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: ao
+        version: 99.99.99
+      platform-requires:
+        ubuntu:
+          packages:
+          - libao-dev
+
+  - name: library-va
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: libva
+      platform-requires:
+        ubuntu:
+          packages:
+          - libva-dev
+
+  - name: library-soxr
+    variables:
+      extra-provides:
+      - nature: library
+        target: soxr
+      platform-requires:
+        ubuntu:
+          packages:
+          - libsoxr-dev
+
+  - name: library-corba # gross simplification
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: corba
+      platform-requires:
+        ubuntu:
+          packages:
+          - omniidl
+          - omniorb
+          - libomniorb4-dev
+
+  - name: library-readline
+    variables:
+      extra-provides:
+      - nature: library
+        target: readline
+      - nature: library
+        target: history
+      platform-requires:
+        ubuntu:
+          packages:
+          - libreadline-dev
+
+  - name: library-edit
+    variables:
+      extra-provides:
+      - nature: library
+        target: edit
+      - nature: pkg-config
+        target: libedit
+      platform-requires:
+        ubuntu:
+          packages:
+          - libedit-dev
+
+  - name: library-tcmalloc
+    variables:
+      extra-provides:
+      - nature: library
+        target: tcmalloc
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtcmalloc-minimal4
+
+  - name: library-gflags
+    variables:
+      extra-provides:
+      - nature: library
+        target: gflags
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgflags-dev
+
+  - name: library-sqlite3
+    variables:
+      extra-provides:
+      - nature: library
+        target: sqlite3
+      platform-requires:
+        ubuntu:
+          packages:
+          - libsqlite3-dev
+
+  - name: library-x11
+    variables:
+      extra-provides:
+      - nature: library
+        target: x11
+      platform-requires:
+        ubuntu:
+          packages:
+          - libx11-dev
+
+  - name: library-cap-ng
+    variables:
+      extra-provides:
+      - nature: library
+        target: cap-ng
+      platform-requires:
+        ubuntu:
+          packages:
+          - libcap-ng-dev
+
+  - name: library-netcdf
+    variables:
+      extra-provides:
+      - nature: library
+        target: netcdf
+      platform-requires:
+        ubuntu:
+          packages:
+          - libnetcdf-dev
+
+  - name: library-hdf5
+    variables:
+      extra-provides:
+      - nature: library
+        target: hdf5
+      platform-requires:
+        ubuntu:
+          packages:
+          - libhdf5-dev
+
+  - name: library-tinyxml
+    variables:
+      extra-provides:
+      - nature: library
+        target: tinyxml
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtinyxml-dev
+
+  - name: library-tinyxml2
+    variables:
+      extra-provides:
+      - nature: library
+        target: tinyxml2
+      platform-requires:
+        ubuntu:
+          packages:
+          - libtinyxml2-dev
+
+  - name: library-gstreamer-0.10 # Lumping things together
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: gstreamer-0.10
+      - nature: pkg-config
+        target: gstreamer-base-0.10
+      - nature: pkg-config
+        target: gstreamer-audio-0.10
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgstreamer0.10-dev
+          - libgstreamer-plugins-base0.10-dev
+
+  - name: library-gstreamer-1.0 # Lumping things together
+    variables:
+      extra-provides:
+      - nature: pkg-config
+        target: gstreamer-1.0
+      - nature: pkg-config
+        target: gstreamer-base-1.0
+      - nature: pkg-config
+        target: gstreamer-audio-1.0
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgstreamer1.0-dev
+          - libgstreamer-plugins-base1.0-dev
+
+  - name: library-dbus
+    variables:
+      extra-provides:
+      - nature: library
+        target: dbus
+      platform-requires:
+        ubuntu:
+          packages:
+          - libdbus-1-dev
+
+  - name: library-gconf
+    variables:
+      extra-provides:
+      - nature: library
+        target: gconf
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgconf2-dev
+
+  - name: library-agg
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: agg
+      platform-requires:
+        ubuntu:
+          packages:
+          - libagg-dev
+
+  - name: library-freetype6
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: freetype
+      platform-requires:
+        ubuntu:
+          packages:
+          - libfreetype6-dev
+
+  - name: library-cairo2
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: cairo
+      platform-requires:
+        ubuntu:
+          packages:
+          - libcairo2-dev
+
+  - name: library-pango
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: pango
+      platform-requires:
+        ubuntu:
+          packages:
+          - libpango1.0-dev
+
+  - name: library-pangocairo-1
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: libpangocairo-1
+      platform-requires:
+        ubuntu:
+          packages:
+          - libpangocairo-1-dev
+
+  - name: library-marisa
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: marisa
+      platform-requires:
+        ubuntu:
+          packages:
+          - libmarisa-dev
+
+  - name: library-gnutls
+    variables:
+      extra-provides:
+      - nature: library
+        target: gnutls
+      platform-requires:
+        ubuntu:
+          packages:
+          - libgnutls28-dev

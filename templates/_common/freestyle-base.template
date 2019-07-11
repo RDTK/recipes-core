@@ -1,0 +1,32 @@
+inherit:
+  - build-system/freestyle
+
+  - platform-packages/programs
+  - platform-packages/libraries
+
+variables:
+  extra-provides:
+    - nature: meta
+      target: ${project-name}
+      version: ${version-name}
+    - '@{next-value|[]}'
+
+  environment.exports: |
+    export ${shell.environment|[]}
+
+  freestyle.make.command: |
+    # setup environment (do not remove this comment!)
+    @{environment.exports}
+
+  shell.command: ${shell.command:${mode}|${shell.command:default}}
+  shell.command:default: ${freestyle.make.command}
+
+aspects:
+  - name: freestyle.shell
+    aspect: shell
+    conditions:
+      job.tags: unix
+    variables:
+      environment.exports: |
+        export ${shell.environment|[]}
+      aspect.shell.command: ${shell.command}

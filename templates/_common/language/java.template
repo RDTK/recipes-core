@@ -1,0 +1,10 @@
+variables:
+
+  tasks.patterns:
+    - '**/*.java'
+    - '**/*.xml'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - java
+    - '@{next-value|[]}'

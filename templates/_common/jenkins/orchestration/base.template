@@ -1,0 +1,52 @@
+inherit:
+  - description
+
+variables:
+  orchestration.build-job-name: ${next-value|${job-name}-${mode}-${distribution-name}}
+
+  orchestration.success-results: ${next-value|${orchestration.success-results:default}}
+  orchestration.success-results:default:
+    - SUCCESS
+    - UNSTABLE
+
+  documentation.groovy: http://groovy-lang.org/single-page-documentation.html
+  documentation.jenkins.api: http://javadoc.jenkins-ci.org/hudson/model/package-summary.html
+
+  description.generated: >-
+    !!! This job is automatically generated - do not modify by
+    hand. !!!
+
+aspects:
+  - name: orchestration-control.parameters
+    aspect: parameters
+    conditions:
+      job.tags: orchestration-control
+      orchestration.control.parameters: .*
+    variables:
+      aspect.parameters.parameters: ${orchestration.control.parameters}
+
+  - name: orchestration-control.groovy
+    aspect: groovy
+    conditions:
+      job.tags: orchestration-control
+    variables:
+      aspect.groovy.kind: system
+      aspect.groovy.code: ${orchestration.control.code}
+
+jobs:
+  - name: orchestration
+    variables:
+      build-job.tags:
+        - orchestration-control
+      build-job.kind: project
+      build-job.name: ${orchestration.build-job-name}
+      build-job.description: |
+        Orchestration job for ${mode} mode of distribution ${distribution-name}.
+
+        ${description.generated}
+
+        ${orchestration.control.explanation|This job orchestrates builds jobs for the distribution.}
+
+        See
+        * ${documentation.groovy} for Groovy
+        * ${documentation.jenkins.api} for Jenkins API

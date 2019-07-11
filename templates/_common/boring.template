@@ -1,0 +1,37 @@
+# This template allows computing lists of files in a workspace or
+# project repository that are uninteresting in a given context.
+
+variables:
+  # Boring files/directories used by various version control systems
+  boring.version-control.directories:
+    - .git
+    - .gitignore
+    - .gitattributes
+    - .svn
+    - .bzr
+  boring.version-control.files: []
+  boring.version-control:
+    - '@{boring.version-control.directories}'
+    - '@{boring.version-control.files}'
+
+  # Boring files/directories used by various editors and IDEs
+  boring.editor.directories:
+    - .project
+    - .idea
+  boring.editor.files:
+    - .dir-locals.el
+    - .editorconfig
+  boring.editor:
+    - '@{boring.editor.directories}'
+    - '@{boring.editor.files}'
+
+  # All boring files/directories
+  boring.files:
+    - '@{boring.version-control.files}'
+    - '@{boring.editor.files}'
+  boring.directories:
+    - '@{boring.version-control.directories}'
+    - '@{boring.editor.directories}'
+  boring.everything:
+    - '@{boring.version-control}'
+    - '@{boring.editor}'

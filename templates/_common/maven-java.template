@@ -1,0 +1,4 @@
+inherit:
+  - maven-base
+
+  - language/java
