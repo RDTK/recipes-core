@@ -1,0 +1,4 @@
+*.template linguist-language=YAML
+*.project linguist-language=YAML
+*.distribution linguist-language=YAML
+*.person linguist-language=YAML
