@@ -5,8 +5,7 @@ variables:
   - name: library-m
     variables:
       extra-provides:
-      - nature: library
-        target: m
+      - library: m
       platform-requires:
         ubuntu:
           packages:
@@ -15,8 +14,7 @@ variables:
   - name: library-gmp
     variables:
       extra-provides:
-      - nature: library
-        target: gmp
+      - library: gmp
       platform-requires:
         ubuntu:
           packages:
@@ -37,8 +35,7 @@ variables:
   - name: m4-macros-autoconf-archive
     variables:
       extra-provides:
-      - nature: m4-macro
-        target: ax_afs
+      - m4-macro: ax_afs
       platform-requires:
         ubuntu:
           packages:
@@ -48,16 +45,13 @@ variables:
   - name: cmake-threads
     variables:
       extra-provides:
-      - nature: cmake
-        target: Threads
+      - cmake: Threads
 
   - name: library-protocol-buffers-c++
     variables:
       extra-provides:
-      - nature: cmake
-        target: ProtocolBuffers
-      - nature: cmake
-        target: ProtoBuf
+      - cmake: ProtocolBuffers
+      - cmake: ProtoBuf
       platform-requires:
         ubuntu:
           packages:
@@ -85,8 +79,7 @@ variables:
   - name: library-gc
     variables:
       extra-provides:
-      - nature: library
-        target: gc
+      - library: gc
       platform-requires:
         ubuntu:
           packages:
@@ -95,19 +88,25 @@ variables:
   - name: library-bsd
     variables:
       extra-provides:
-      - nature: library
-        target: bsd
+      - library: bsd
       platform-requires:
         ubuntu:
           packages:
           - libbsd-dev
 
+  - name: library-gtest
+    variables:
+      extra-provides:
+      - cmake: gtest
+      platform-provides:
+        ubuntu:
+          packages:
+          - libgtest-dev
 
   - name: library-zlib
     variables:
       extra-provides:
-      - nature: library
-        target: libz
+      - library: libz
       - nature: cmake
         target: ZLIB
         version: 1.2.11
@@ -119,8 +118,8 @@ variables:
   - name: library-bzip2
     variables:
       extra-provides:
-      - nature: cmake
-        target: BZip2
+      - cmake: BZip2
+      - c-include: bzlib.h
       platform-requires:
         ubuntu:
           packages:
@@ -129,10 +128,8 @@ variables:
   - name: library-lzma
     variables:
       extra-provides:
-      - nature: library
-        target: lzma
-      - nature: cmake
-        target: liblzma
+      - library: lzma
+      - cmake: liblzma
       platform-requires:
         ubuntu:
           packages:
@@ -141,8 +138,7 @@ variables:
   - name: library-elf
     variables:
       extra-provides:
-      - nature: library
-        target: elf
+      - library: elf
       platform-requires:
         ubuntu:
           packages:
@@ -151,8 +147,7 @@ variables:
   - name: library-pcap
     variables:
       extra-provides:
-      - nature: cmake
-        target: PCAP
+      - cmake: PCAP
       platform-requires:
         ubuntu:
           packages:
@@ -164,8 +159,7 @@ variables:
       - nature: cmake
         target: eigen3
         version: 3.99.99
-      - nature: pkg-config
-        target: eigen3
+      - pkg-config: eigen3
       # Some Orocos-related projects spell the feature the following
       # way. I (jmoringe) believe this is incorrect and only work
       # because the projects in question provide their own fallback
@@ -181,8 +175,7 @@ variables:
   - name: library-lapack
     variables:
       extra-provides:
-      - nature: library
-        target: lapack
+      - library: lapack
       platform-requires:
         ubuntu:
           packages:
@@ -191,8 +184,7 @@ variables:
   - name: library-openblas
     variables:
       extra-provides:
-      - nature: library
-        target: openblas
+      - library: openblas
       platform-requires:
         ubuntu:
           packages:
@@ -201,8 +193,7 @@ variables:
   - name: library-blas
     variables:
       extra-provides:
-      - nature: library
-        target: blas
+      - library: blas
       platform-requires:
         ubuntu:
           packages:
@@ -246,6 +237,17 @@ variables:
           packages:
           - python3.0
 
+  - name: library-python-interpreter-3
+    variables:
+      extra-provides:
+      - nature: cmake
+        target: PythonInterp
+        version: '3'
+      platform-requires:
+        ubuntu:
+          packages:
+          - python3
+
   - name: library-python
     variables:
       extra-provides:
@@ -260,8 +262,7 @@ variables:
   - name: library-x11
     variables:
       extra-provides:
-      - nature: cmake
-        target: X11
+      - cmake: X11
       platform-requires:
         ubuntu:
           packages:
@@ -344,10 +345,8 @@ variables:
       - nature: cmake
         target: curses
         version: 99.99.99
-      - nature: pkg-config
-        target: ncurses
-      - nature: library
-        target: ncurses
+      - pkg-config: ncurses
+      - library: ncurses
       platform-requires:
         ubuntu:
           packages:
@@ -367,8 +366,7 @@ variables:
   - name: library-gsl
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: gsl
+      - pkg-config: gsl
       platform-requires:
         ubuntu:
           packages:
@@ -379,6 +377,9 @@ variables:
       extra-provides:
       - nature: cmake
         target: yamlcpp
+        version: 99.99.99
+      - nature: cmake
+        target: yaml-cpp
         version: 99.99.99
       - nature: pkg-config
         target: yaml-cpp
@@ -402,10 +403,8 @@ variables:
   - name: library-libusb-1-0 # TODO
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: libusb-1.0
-      - nature: cmake
-        target: libusb
+      - pkg-config: libusb-1.0
+      - cmake: libusb
       platform-requires:
         ubuntu:
           packages:
@@ -414,8 +413,7 @@ variables:
   - name: library-xpm
     variables:
       extra-provides:
-      - nature: library
-        target: xpm
+      - library: xpm
       platform-requires:
         ubuntu:
           packages:
@@ -424,10 +422,8 @@ variables:
   - name: library-png
     variables:
       extra-provides:
-      - nature: library
-        target: png
-      - nature: cmake
-        target: png
+      - library: png
+      - cmake: png
       platform-requires:
         ubuntu:
           packages:
@@ -436,10 +432,8 @@ variables:
   - name: library-jpeg
     variables:
       extra-provides:
-      - nature: library
-        target: jpeg
-      - nature: cmake
-        target: jpeg
+      - library: jpeg
+      - cmake: jpeg
       platform-requires:
         ubuntu:
           packages:
@@ -448,10 +442,8 @@ variables:
   - name: library-gif
     variables:
       extra-provides:
-      - nature: library
-        target: gif
-      - nature: cmake
-        target: gif
+      - library: gif
+      - cmake: gif
       platform-requires:
         ubuntu:
           packages:
@@ -460,8 +452,7 @@ variables:
   - name: library-tiff
     variables:
       extra-provides:
-      - nature: library
-        target: tiff
+      - library: tiff
       platform-requires:
         ubuntu:
           packages:
@@ -470,8 +461,7 @@ variables:
   - name: library-rsvg
     variables:
       extra-provides:
-      - nature: library
-        target: rsvg
+      - library: rsvg
       platform-requires:
         ubuntu:
           packages:
@@ -480,8 +470,7 @@ variables:
   - name: library-sdl-image
     variables:
       extra-provides:
-      - nature: cmake
-        target: sdl_image
+      - cmake: sdl_image
       platform-requires:
         ubuntu:
           packages:
@@ -490,8 +479,7 @@ variables:
   - name: library-opengl
     variables:
       extra-provides:
-      - nature: cmake
-        target: opengl
+      - cmake: opengl
       platform-requires:
         ubuntu:
           packages:
@@ -500,10 +488,8 @@ variables:
   - name: library-glew
     variables:
       extra-provides:
-      - nature: library
-        target: glew
-      - nature: cmake
-        target: glew
+      - library: glew
+      - cmake: glew
       platform-requires:
         ubuntu:
           packages:
@@ -512,10 +498,8 @@ variables:
   - name: library-glfw
     variables:
       extra-provides:
-      - nature: library
-        target: glfw
-      - nature: cmake
-        target: glfw
+      - library: glfw
+      - cmake: glfw
       platform-requires:
         ubuntu:
           packages:
@@ -524,8 +508,8 @@ variables:
   - name: library-freeglut3
     variables:
       extra-provides:
-      - nature: cmake
-        target: freeglut3
+      - library: freeglut3
+      - cmake: freeglut3
       platform-requires:
         ubuntu:
           packages:
@@ -534,8 +518,7 @@ variables:
   - name: library-gtk-3-0
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: gtk+-3.0
+      - pkg-config: gtk+-3.0
       platform-requires:
         ubuntu:
           packages:
@@ -544,12 +527,21 @@ variables:
   - name: library-webkit2gtk-4.0
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: webkit2gtk-4.0
+      - pkg-config: webkit2gtk-4.0
       platform-requires:
         ubuntu:
           packages:
           - libwebkit2gtk-4.0-dev
+
+  - name: library-fltk
+    variables:
+      extra-provides:
+      - library: fltk
+      - cmake: FLTK
+      platform-requires:
+        ubuntu:
+          packages:
+          - libfltk-dev
 
   - name: library-tinyxml
     variables:
@@ -607,10 +599,8 @@ variables:
   - name: library-curl
     variables:
       extra-provides:
-      - nature: cmake
-        target: curl
-      - nature: pkg-config
-        target: libcurl
+      - cmake: curl
+      - pkg-config: libcurl
       platform-requires:
         ubuntu:
           packages:
@@ -619,8 +609,7 @@ variables:
   - name: library-tcmalloc
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: libtcmalloc
+      - pkg-config: libtcmalloc
       platform-requires:
         ubuntu:
           packages:
@@ -629,12 +618,9 @@ variables:
   - name: library-tbb
     variables:
       extra-provides:
-      - nature: library
-        target: tbb
-      - nature: pkg-config
-        target: tbb
-      - nature: cmake
-        target: tbb
+      - library: tbb
+      - pkg-config: tbb
+      - cmake: tbb
       platform-requires:
         ubuntu:
           packages:
@@ -643,8 +629,7 @@ variables:
   - name: library-ccd
     variables:
       extra-provides:
-      - nature: library
-        target: ccd
+      - library: ccd
       - nature: cmake
         target: ccd
         version: 99.99.99
@@ -659,8 +644,7 @@ variables:
   - name: library-gts
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: gts
+      - pkg-config: gts
       platform-requires:
         ubuntu:
           packages:
@@ -669,10 +653,8 @@ variables:
   - name: library-uuid
     variables:
       extra-provides:
-      - nature: cmake
-        target: uuid
-      - nature: pkg-config
-        target: uuid
+      - cmake: uuid
+      - pkg-config: uuid
       platform-requires:
         ubuntu:
           packages:
@@ -681,13 +663,11 @@ variables:
   - name: library-fcl
     variables:
       extra-provides:
-      - nature: library
-        target: fcl
+      - library: fcl
       - nature: cmake
         target: fcl
         version: 99.99.99
-      - nature: pkg-config
-        target: fcl
+      - pkg-config: fcl
       platform-requires:
         ubuntu:
           packages:
@@ -713,10 +693,8 @@ variables:
       - nature: cmake
         target: libxml2
         version: 2.9.4
-      - nature: pkg-config
-        target: libxml-2.0
-      - nature: pkg-config
-        target: libxml2
+      - pkg-config: libxml-2.0
+      - pkg-config: libxml2
       - nature: pkg-config
         target: libxml
         version: 2.99.99
@@ -728,12 +706,9 @@ variables:
   - name: library-xerces
     variables:
       extra-provides:
-      - nature: library
-        target: xerces-c
-      - nature: cmake
-        target: xerces
-      - nature: pkg-config
-        target: xerces-c
+      - library: xerces-c
+      - cmake: xerces
+      - pkg-config: xerces-c
       platform-requires:
         ubuntu:
           packages:
@@ -753,18 +728,25 @@ variables:
   - name: library-va
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: libva
+      - pkg-config: libva
       platform-requires:
         ubuntu:
           packages:
           - libva-dev
 
+  - name: library-sox
+    variables:
+      extra-provides:
+      - library: sox
+      platform-requires:
+        ubuntu:
+          packages:
+          - libsox-dev
+
   - name: library-soxr
     variables:
       extra-provides:
-      - nature: library
-        target: soxr
+      - library: soxr
       platform-requires:
         ubuntu:
           packages:
@@ -773,8 +755,7 @@ variables:
   - name: library-corba # gross simplification
     variables:
       extra-provides:
-      - nature: cmake
-        target: corba
+      - cmake: corba
       platform-requires:
         ubuntu:
           packages:
@@ -785,10 +766,9 @@ variables:
   - name: library-readline
     variables:
       extra-provides:
-      - nature: library
-        target: readline
-      - nature: library
-        target: history
+      - library: readline
+      - library: history
+      - cmake: readline
       platform-requires:
         ubuntu:
           packages:
@@ -797,10 +777,8 @@ variables:
   - name: library-edit
     variables:
       extra-provides:
-      - nature: library
-        target: edit
-      - nature: pkg-config
-        target: libedit
+      - library: edit
+      - pkg-config: libedit
       platform-requires:
         ubuntu:
           packages:
@@ -809,18 +787,25 @@ variables:
   - name: library-tcmalloc
     variables:
       extra-provides:
-      - nature: library
-        target: tcmalloc
+      - library: tcmalloc
       platform-requires:
         ubuntu:
           packages:
           - libtcmalloc-minimal4
 
+  - name: library-mcpp
+    variables:
+      extra-provides:
+      - library: mcpp
+      platform-requires:
+        ubuntu:
+          packages:
+          - libmcpp-dev
+
   - name: library-gflags
     variables:
       extra-provides:
-      - nature: library
-        target: gflags
+      - library: gflags
       platform-requires:
         ubuntu:
           packages:
@@ -829,18 +814,25 @@ variables:
   - name: library-sqlite3
     variables:
       extra-provides:
-      - nature: library
-        target: sqlite3
+      - library: sqlite3
       platform-requires:
         ubuntu:
           packages:
           - libsqlite3-dev
 
+  - name: library-db_cxx
+    variables:
+      extra-provides:
+      - library: db_cxx
+      platform-requires:
+        ubuntu:
+          packages:
+          - libdb++-dev
+
   - name: library-x11
     variables:
       extra-provides:
-      - nature: library
-        target: x11
+      - library: x11
       platform-requires:
         ubuntu:
           packages:
@@ -849,8 +841,7 @@ variables:
   - name: library-cap-ng
     variables:
       extra-provides:
-      - nature: library
-        target: cap-ng
+      - library: cap-ng
       platform-requires:
         ubuntu:
           packages:
@@ -859,8 +850,7 @@ variables:
   - name: library-netcdf
     variables:
       extra-provides:
-      - nature: library
-        target: netcdf
+      - library: netcdf
       platform-requires:
         ubuntu:
           packages:
@@ -869,8 +859,7 @@ variables:
   - name: library-hdf5
     variables:
       extra-provides:
-      - nature: library
-        target: hdf5
+      - library: hdf5
       platform-requires:
         ubuntu:
           packages:
@@ -879,8 +868,7 @@ variables:
   - name: library-tinyxml
     variables:
       extra-provides:
-      - nature: library
-        target: tinyxml
+      - library: tinyxml
       platform-requires:
         ubuntu:
           packages:
@@ -889,8 +877,7 @@ variables:
   - name: library-tinyxml2
     variables:
       extra-provides:
-      - nature: library
-        target: tinyxml2
+      - library: tinyxml2
       platform-requires:
         ubuntu:
           packages:
@@ -899,12 +886,9 @@ variables:
   - name: library-gstreamer-0.10 # Lumping things together
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: gstreamer-0.10
-      - nature: pkg-config
-        target: gstreamer-base-0.10
-      - nature: pkg-config
-        target: gstreamer-audio-0.10
+      - pkg-config: gstreamer-0.10
+      - pkg-config: gstreamer-base-0.10
+      - pkg-config: gstreamer-audio-0.10
       platform-requires:
         ubuntu:
           packages:
@@ -914,12 +898,9 @@ variables:
   - name: library-gstreamer-1.0 # Lumping things together
     variables:
       extra-provides:
-      - nature: pkg-config
-        target: gstreamer-1.0
-      - nature: pkg-config
-        target: gstreamer-base-1.0
-      - nature: pkg-config
-        target: gstreamer-audio-1.0
+      - pkg-config: gstreamer-1.0
+      - pkg-config: gstreamer-base-1.0
+      - pkg-config: gstreamer-audio-1.0
       platform-requires:
         ubuntu:
           packages:
@@ -929,8 +910,7 @@ variables:
   - name: library-dbus
     variables:
       extra-provides:
-      - nature: library
-        target: dbus
+      - library: dbus
       platform-requires:
         ubuntu:
           packages:
@@ -939,8 +919,7 @@ variables:
   - name: library-gconf
     variables:
       extra-provides:
-      - nature: library
-        target: gconf
+      - library: gconf
       platform-requires:
         ubuntu:
           packages:
@@ -949,28 +928,59 @@ variables:
   - name: library-agg
     variables:
       extra-provides:
-      - nature: cmake
-        target: agg
+      - cmake: agg
       platform-requires:
         ubuntu:
           packages:
           - libagg-dev
 
+  - name: library-fontconfig
+    variables:
+      extra-provides:
+        - library: fontconfig
+        - pkg-config: fontconfig
+      platform-requires:
+        ubuntu:
+          packages:
+            - libfontconfig1-dev
+
   - name: library-freetype6
     variables:
       extra-provides:
-      - nature: cmake
-        target: freetype
+      - library: freetype
+      - cmake: freetype
       platform-requires:
         ubuntu:
           packages:
           - libfreetype6-dev
 
+  - name: library-harfbuzz
+    variables:
+      extra-provides:
+        - library: harfbuzz
+      platform-requires:
+        ubuntu:
+          packages:
+            - libharfbuzz-dev
+
+  - name: library-harfbuzz-1.3
+    variables:
+      extra-provides:
+        - nature: library
+          target: harfbuzz
+          version: '1.3'
+      platform-requires:
+        ubuntu:
+          packages:
+            - no-such-package
+          bionic:
+            packages:
+              - libharfbuzz-dev
+
   - name: library-cairo2
     variables:
       extra-provides:
-      - nature: cmake
-        target: cairo
+      - cmake: cairo
       platform-requires:
         ubuntu:
           packages:
@@ -979,8 +989,7 @@ variables:
   - name: library-pango
     variables:
       extra-provides:
-      - nature: cmake
-        target: pango
+      - cmake: pango
       platform-requires:
         ubuntu:
           packages:
@@ -989,8 +998,7 @@ variables:
   - name: library-pangocairo-1
     variables:
       extra-provides:
-      - nature: cmake
-        target: libpangocairo-1
+      - cmake: libpangocairo-1
       platform-requires:
         ubuntu:
           packages:
@@ -999,8 +1007,7 @@ variables:
   - name: library-marisa
     variables:
       extra-provides:
-      - nature: cmake
-        target: marisa
+      - cmake: marisa
       platform-requires:
         ubuntu:
           packages:
@@ -1009,9 +1016,18 @@ variables:
   - name: library-gnutls
     variables:
       extra-provides:
-      - nature: library
-        target: gnutls
+      - library: gnutls
       platform-requires:
         ubuntu:
           packages:
           - libgnutls28-dev
+
+  - name: library-openssl
+    variables:
+      extra-provides:
+      - cmake: openssl
+      - library: ssl
+      platform-requires:
+        ubuntu:
+          packages:
+          - libssl1.0.0

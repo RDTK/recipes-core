@@ -1,17 +1,11 @@
 variables:
   extra-requires:
-    - nature: program
-      target: wget
-    - nature: program
-      target: unp
-    - nature: program
-      target: unzip
-    - nature: program
-      target: tar
-    - nature: program
-      target: bzip2
-    - nature: program
-      target: gzip
+    - program: wget
+    - program: unp
+    - program: unzip
+    - program: tar
+    - program: bzip2
+    - program: gzip
     - '@{next-value|[]}'
 
 aspects:

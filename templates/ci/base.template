@@ -1,13 +1,25 @@
 inherit:
-  - jenkins/job-defaults
-  - jenkins/retention
-  - jenkins/scm-polling
-  - jenkins/artifact-archiving
+  - target
+  - description/text
 
-  - repository/archive
-  - repository/git
-  - repository/subversion
-  - repository/mercurial
+  - jenkins/base
+  - jenkins/scm-polling
+  - jenkins/dependency-download
+  - jenkins/artifact-archiving
+  - jenkins/tasks
+  - jenkins/warnings
+  - jenkins/sloccount
+
+  - repository/all
+
+  - platform-packages/libraries
+  - platform-packages/programs
+  - platform-packages/fonts
+  - platform-packages/maven-central
+  # - platform-packages/pypi
+  # - platform-packages/python
+  - platform-packages/quicklisp
+  # - platform-packages/ros
 
   - boring
 
@@ -16,5 +28,17 @@ variables:
 
   compilation-mode: debug
 
-  dependency-dir: dep-dir
-  dependency-dir:relative: dep-dir/relative
+  build-dir: build
+  build-dir:absolute: \$(pwd)/build
+  build-dir:relative: build
+
+  dependencies.mode: minimal
+  dependency-dir: upstream
+  dependency-dir:absolute: \$(pwd)/upstream
+  dependency-dir:relative: upstream
+
+  toolkit.dir: install # TODO HACK
+
+  boring.directories:
+    - '@{next-value|[]}'
+    - '${toolkit.dir}'

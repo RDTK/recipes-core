@@ -1,13 +1,13 @@
 variables:
-  keep-builds/days:default: false
-  keep-builds/count:default: false
   keep-builds/days: ${next-value|${keep-builds/days:default}}
+  keep-builds/days:default: false
   keep-builds/count: ${next-value|${keep-builds/count:default}}
+  keep-builds/count:default: false
 
-  keep-artifacts/days:default: 30
-  keep-artifacts/count:default: 10
   keep-artifacts/days: ${next-value|${keep-artifacts/days:default}}
+  keep-artifacts/days:default: 30
   keep-artifacts/count: ${next-value|${keep-artifacts/count:default}}
+  keep-artifacts/count:default: 10
 
 aspects:
   - name: jenkins.retention/retention

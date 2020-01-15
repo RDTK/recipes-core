@@ -1,20 +1,21 @@
 variables:
   lisp.archive.exclude:ci:
-    - sloccount.sc
-    - ${lisp.fasl-cache-directory:relative}
-    - ${dependency-dir:relative}
+    # - ${dependency-dir:relative}
     - '@{lisp.archive.exclude:default}'
 
   lisp.archive.command: |
-    # Package source code
-    temp=$(mktemp -u).tar.gz
-    tar @{lisp.archive.exclude.options}                            \
-      --transform 's#^\.\(.*\)#${project-name}-${version-name}\1#' \
-      -czf "\${temp}"                                              \
+    # Package source code (remove archive from previous build first
+    rm -f "${lisp.archive.filename}"
+    temp=\$(mktemp -u).tar.gz
+    tar @{lisp.archive.exclude.options}                             \
+      --transform 's#^\.\(.*\)#${safe-project-and-version-name}\1#' \
+      -czf "\${temp}"                                               \
       .
     mv "\${temp}" "${lisp.archive.filename}"
 
-    archive-pattern: ${lisp.archive.filename}
+  archive.patterns:
+    - '@{next-value|[]}'
+    - ${lisp.archive.filename}
 
 aspects:
   - name: common-lisp-shared.archive-source-code

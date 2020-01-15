@@ -1,4 +1,6 @@
 inherit:
+  - names
+
   - build-system/asdf
 
   - language/common-lisp
@@ -8,16 +10,17 @@ inherit:
 variables:
 
   extra-requires:
-    - nature: program
-      target: cl-launch
-    - nature: meta
-      target: quicklisp
+    - program: cl-launch
+    - meta: quicklisp
 
-    # For archiving/installing source code
-    - nature: program
-      target: tar
+    # For archiving but also installing source code
+    - program: tar
 
     - '@{next-value|[]}'
+
+  boring.directories:
+    - '@{next-value|[]}'
+    - ${lisp.fasl-cache-directory:relative}
 
   lisp.source-dir: ${lisp.source-dir:${mode}|${lisp.source-dir:default}}
   lisp.source-dir:default: ${dependency-dir}/share/common-lisp/source
@@ -25,7 +28,7 @@ variables:
 
   # Source code archiving
   lisp.archive.filename: ${lisp.archive.filename:${mode}|${lisp.archive.filename:default}}
-  lisp.archive.filename:default: ${project-name}-${version-name}.tar.gz
+  lisp.archive.filename:default: ${safe-project-and-version-name}.tar.gz
 
   lisp.archive.exclude: ${lisp.archive.exclude:${mode}|${lisp.archive.exclude:default}}
   lisp.archive.exclude:default: ${boring.everything}
@@ -46,16 +49,19 @@ variables:
 
   lisp.load-systems: ${lisp.load-systems:${mode}|${lisp.load-systems:default}}
   lisp.load-systems:default: ${analysis.systems}
-
   lisp.load-systems.options: ${lisp.load-systems.options:${mode}|-s ${lisp.load-systems} }
-  lisp.load-systems.options:ci: '-s ${lisp.test.systems} '
 
+  lisp.test.load-systems: ${lisp.test.load-systems:${mode}|${lisp.test.load-systems:default}}
+  lisp.test.load-systems:default: ${lisp.test.systems}
+  lisp.test.load-systems.options: ${lisp.test.load-systems.options:${mode}|-s ${lisp.test.load-systems} }
   lisp.test.systems: ${analysis.test-systems|${lisp.load-systems}}
-  lisp.test.system-keywords: ':${lisp.test.systems} '
+  lisp.test.system-names: '"${lisp.test.systems}" '
 
-  lisp.test.expression: ${lisp.test.expression:${mode}|${lisp.test.expression:default}}
-  lisp.test.expression:default: |
-    '(mapc (function asdf:test-system) (list @{lisp.test.system-keywords}))'
+  lisp.test.expressions: ${lisp.test.expressions:${mode}|${lisp.test.expressions:default}}
+  lisp.test.expressions:default:
+    - '(mapc (function asdf:test-system) (list @{lisp.test.system-names}))'
+  lisp.test.expression-lines: |
+    ${lisp.test.expressions}
 
   binary-directory: ${binary-directory:${mode}|${binary-directory:default}}
   binary-directory:default: ${dependency-dir}/bin
@@ -63,29 +69,108 @@ variables:
 
   # Commands
 
-  lisp.source-registry-option: |
-    -S "(:source-registry                                              \
-           (:tree \""\$(pwd)"\")                                       \
-           (:tree \"${dependency-dir}/share/common-lisp/source\")      \
-           :ignore-inherited-configuration)"                           \
+  lisp.cl-launch.options-variable: $(upcase ${language.common-lisp.compiler})_OPTIONS
+  lisp.cl-launch.command: |-
+    ${binary-directory}/cl-launch                                                                                    \
+      --lisp ${language.common-lisp.compiler}                                                                        \
+      --wrap '${lisp.cl-launch.options-variable}="${lisp.runtime-options| } \${${lisp.cl-launch.options-variable}}"' \
 
-  lisp.test.command: |
-    ${binary-directory}/cl-launch                                        \
-      --wrap 'SBCL_OPTIONS="${lisp.runtime-options| } \${SBCL_OPTIONS}"' \
+  lisp.source-registry-expression: |-
+    (:source-registry                                                 \
+      (:tree \"\$(pwd)\")                                             \
+      (:tree \"${dependency-dir:absolute}/share/common-lisp/source\") \
+      :ignore-inherited-configuration)
+  lisp.source-registry-option: |-
+    -S "${lisp.source-registry-expression}" \
+
+  # Check FASL cache
+  lisp.check-fasl-cache.form: |-
+    (let ((file (first (directory "'''"${lisp.fasl-cache-directory:absolute}"'''/**/*.fasl"))))
+      (when file
+        (handler-case
+            (sb-fasl::check-fasl-header (open file :element-type (quote (unsigned-byte 8))))
+          (sb-fasl::invalid-fasl-version ()
+            (uiop:quit 1)))))
+
+  lisp.check-fasl-cache.command: ${lisp.check-fasl-cache.command:${language.common-lisp.compiler}|true}
+  lisp.check-fasl-cache.command:sbcl: |-
+    if ! ${lisp.cl-launch.command}
+           '${lisp.check-fasl-cache.form}' ; then
+      echo "FASL cache in ${lisp.fasl-cache-directory:absolute} is not usable, deleting."
+      rm -rf "${lisp.fasl-cache-directory:absolute}"
+    fi
+
+  # Ensure dependencies command
+  lisp.ensure-dependencies.system-arguments: '"${lisp.load-systems}" '
+  lisp.ensure-dependencies.form: |-
+    (flet ((ensure-system-dependencies (system)
+             (ql:quickload (ql-dist:required-systems (ql-dist:find-system system)))))
+      (map nil (function ensure-system-dependencies) (list @{lisp.ensure-dependencies.system-arguments})))
+  lisp.ensure-dependencies.options: '-s ${analysis.dependency-systems} '
+  lisp.ensure-dependencies.command: |-
+    ${lisp.cl-launch.command}
       ${lisp.source-registry-option}
-      @{lisp.load-systems.options}                                       \
-      ${lisp.test.expression}
+      @{lisp.ensure-dependencies.options}
+  #'${lisp.ensure-dependencies.form}'
 
-  shell.command: |
+  # Compile command
+  lisp.compile.system-arguments: '"${lisp.load-systems}" '
+  lisp.compile.form: |-
+    (flet ((compile-system (system)
+             (asdf:load-system system :force t)))
+      (map nil (function compile-system) (list @{lisp.compile.system-arguments})))
+  lisp.compile.expressions:
+    - '@{lisp.compile.expressions:${mode}|${lisp.compile.expressions:default}}'
+    - "'${lisp.compile.form}'"
+  lisp.compile.expressions:default:
+    - "'(require :asdf)'"
+    - '"(asdf:initialize-source-registry (quote ${lisp.source-registry-expression}))"'
+  lisp.compile.expression-options: |2
+      --eval ${lisp.compile.expressions} \
+  lisp.compile.command: ${lisp.compile.command:${language.common-lisp.compiler}}
+  lisp.compile.command:sbcl: |-
+    SBCL_HOME=${dependency-dir:absolute}/install/lib/sbcl ${binary-directory}/sbcl \
+      --noinform --lose-on-corruption ${lisp.runtime-options| }           \
+      --no-userinit --disable-debugger --non-interactive                  \
+      @{lisp.compile.expression-options} \
+      --quit
+  lisp.compile.command:ecl: |-
+    ${binary-directory}/ecl \
+      @{lisp.compile.expression-options} \
+      --eval '(quit)'
+  lisp.compile.command:ccl: |-
+    ${binary-directory}/../ccl/lx86cl64 \
+      --no-init --quiet --batch \
+      @{lisp.compile.expression-options} \
+      --eval '(quit)'
+
+  # Test command
+  lisp.test.command: |-
+    ${lisp.cl-launch.command}
+      ${lisp.source-registry-option}
+      @{lisp.test.load-systems.options}                                  \
+      '(progn @{lisp.test.expression-lines})'
+
+  shell.command: ${shell.command:${mode}|${shell.command:default}}
+  shell.command:default: |
     # Set up environment
     @{lisp.environment.commands}
+
+    # Flush FASL cache if its contents is no longer compatible with
+    # the implementation
+    ${lisp.check-fasl-cache.command}
+
+    # Ensure dependencies
+    ${lisp.ensure-dependencies.command}
+
+    # Compile
+    ${lisp.compile.command}
 
     # Execute tests
     ${lisp.test.command}
 
   build-job.tags:
     - cl-launch
-    - sbcl
     - '@{next-value|[]}'
 
 aspects:
@@ -97,4 +182,4 @@ aspects:
       aspect.builder-constraints.shell:
         - [ after, { name: dependency-download } ]
         - [ after, { type: copy-artifact }       ]
-      aspect.shell.command: ${shell.command:${mode}|${shell.command}}
+      aspect.shell.command: ${shell.command}

@@ -4,14 +4,10 @@ variables:
     - '@{next-value|[]}'
 
   extra-requires:
-    - nature: program
-      target: autoconf
-    - nature: m4-macro
-      target: ax_afs
-    - nature: program
-      target: libtoolize
-    - nature: program
-      target: pkg-config
+    - program: autoconf
+    - m4-macro: ax_afs
+    - program: libtoolize
+    - program: pkg-config
     - '@{next-value|[]}'
 
   task.patterns:

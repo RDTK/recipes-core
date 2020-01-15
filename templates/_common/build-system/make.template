@@ -1,7 +1,6 @@
 variables:
   extra-requires:
-    - nature: program
-      target: make
+    - program: make
     - '@{next-value|[]}'
 
   tasks.patterns:

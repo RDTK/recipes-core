@@ -49,26 +49,20 @@ variables:
   host-compiler: sbcl
 
   extra-requires:
-    - nature: program
-      target: git
-    - nature: program
-      target: gcc
-    - nature: program@build
-      target: ${host-compiler}
-    - nature: program
-      target: make
-    - nature: program
-      target: time
-    - nature: library
-      target: libz
+    - program: git
+    - program: gcc
+    - program@build: ${host-compiler}
+    - program: make
+    - program: time
+    - library: libz
     - '@{next-value|[]}'
 
   extra-provides:
     - nature: program
       target: sbcl
       version: ${version-name}
-    - nature: meta
-      target: common-lisp-compiler
+    - meta: common-lisp-compiler
+    - asdf: sb-cltl2
     - '@{next-value|[]}'
 
   sbcl.host-compiler: ${host-compiler} --no-sysinit --no-userinit
@@ -108,18 +102,21 @@ variables:
     ( cd doc/manual && make )
   sbcl.compile-command: ${sbcl.compile-command.minimal}
 
+  shell.command:default: |
+    ${sbcl.compile-command}
+
+    sh install.sh
+
+  # Toolkit and ci-deploy modes
   sbcl.options:toolkit:
     - '@{sbcl.options:default}'
     - --prefix=${toolkit.dir}
   sbcl.options:ci-deploy: ${sbcl.options:toolkit}
 
-  shell.command: |
-    ${sbcl.compile-command}
-
-    sh install.sh
-  archive-name: sbcl.tar.gz
+  # CI mode
+  archive-name: ${project-name}-${version-name}.tar.gz
   sbcl.options:ci:
-  - '@{sbcl.options:default}'
+    - '@{sbcl.options:default}'
   shell.command:ci: |
     ${sbcl.compile-command}
 
@@ -140,7 +137,13 @@ variables:
     - '**/*Makefile'
     - '**/*.sh'
 
-  archive-pattern: ${archive-name}
+  archive.patterns:
+    - ${archive-name}
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - '@{next-value|[]}'
+    - sbcl
 
 versions:
   - pattern: '^sbcl-[0-9]+\.[0-9]+\.[0-9]+$'
@@ -157,3 +160,9 @@ versions:
           target: pdflatex
         - '@{next-value|[]}'
       sbcl.compile-command: ${sbcl.compile-command.doc}
+      archive.patterns:
+        - '@{next-value|[]}'
+        - doc/manual/sbcl.pdf
+        - doc/manual/sbcl.html
+        - doc/manual/asdf.pdf
+        - doc/manual/asdf.html

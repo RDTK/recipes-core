@@ -1,4 +1,9 @@
 variables:
+  language.common-lisp.compiler: ${next-value|sbcl}
+
+  extra-requires:
+    - program: ${language.common-lisp.compiler}
+    - '@{next-value|[]}'
 
   tasks.patterns:
     - '**/*.lisp'
@@ -6,4 +11,5 @@ variables:
 
   build-job.tags:
     - common-lisp
+    - ${language.common-lisp.compiler}
     - '@{next-value|[]}'

@@ -1,0 +1,16 @@
+variables:
+  description: ${analysis.description|${description.none}}
+  license: ${analysis.license|${description.unknown}}
+  natures: ${analysis.natures|[]}
+  programming-languages: ${analysis.programming-languages|[]}
+
+  authors: ${analysis.authors|[]}
+  maintainers: ${analysis.maintainers|[]}
+  committers: ${analysis.committers|[]}
+  project-contacts:
+    - '@{maintainers}'
+    - '@{authors}'
+  recipe-contacts: ${recipe.maintainer|[]}
+
+  most-recent-commit.id: ${analysis.most-recent-commit.id|${description.unknown}}
+  most-recent-commit.date: ${analysis.most-recent-commit.date|${description.unknown}}

@@ -1,8 +1,4 @@
 inherit:
-  - language/common-lisp
-
-  - build-system/asdf
-
   - platform-packages/programs
   - platform-packages/libraries # for foreign libraries
   - platform-packages/quicklisp
@@ -15,10 +11,22 @@ variables:
     # Set up environment
     @{lisp.environment.commands}
 
+    # Ensure dependencies
+    ${lisp.ensure-dependencies.command}
+
+    # Compile
+    ${lisp.compile.command}
+
     # Build executable
-    ${lisp.build-command}
+    ${lisp.build.command}
 
     # Execute tests
     ${lisp.test.command}
 
-    
+  lisp.archive.exclude:ci:
+    - '@{next-value|[]}'
+    - ${lisp.binary-name}
+
+  archive-patterns:
+    - '@{next-value|[]}'
+    - '${lisp.binary-name}'

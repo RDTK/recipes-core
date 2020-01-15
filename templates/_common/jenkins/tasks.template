@@ -5,7 +5,8 @@ variables:
   tasks.exclude.directories: ${boring.directories}
   tasks.exclude.directory-patterns: ${tasks.exclude.directories}/**/*.*
   tasks.exclude:
-    - ${build-dir}/**/*.*
+    # - ${build-dir}/**/*.* # TODO does this still exist?
+    - '${dependency-dir}/**/*.*'
     - '@{boring.files}'
     - '@{tasks.exclude.directory-patterns}'
 

@@ -1,5 +1,6 @@
 inherit:
-  - description
+#  - description
+  - jenkins/console-timestamper
 
 variables:
   orchestration.build-job-name: ${next-value|${job-name}-${mode}-${distribution-name}}
@@ -38,7 +39,9 @@ jobs:
     variables:
       build-job.tags:
         - orchestration-control
+      kind: ${build-job.kind} # TODO the generator still reads this
       build-job.kind: project
+      build-job-name: ${build-job.name} # TODO the generator still reads this
       build-job.name: ${orchestration.build-job-name}
       build-job.description: |
         Orchestration job for ${mode} mode of distribution ${distribution-name}.

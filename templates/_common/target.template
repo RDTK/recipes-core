@@ -1,0 +1,7 @@
+variables:
+  target.platform: ${target.platform:${mode}|${target.platform:default}}
+  target.platform:default:
+    - linux
+    - debianoid
+    - ubuntu
+    - xenial

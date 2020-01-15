@@ -1,0 +1,34 @@
+inherit:
+  - jenkins/junit-report
+
+variables:
+  extra-requires:
+    - asdf: test.report
+    - '@{next-value|[]}'
+
+  lisp.test.load-systems:ci:
+    - '@{next-value|${lisp.test.load-systems:default}}'
+    - test.report.adapter-fiveam
+    - test.report.report-junit
+  lisp.test.expressions:ci:
+    - '(test.report.adapter.fiveam:hook-into-run)'
+    - '@{next-value|${lisp.test.expressions:default}}'
+
+  test-result-pattern: test-results-*.xml
+
+  lisp.test.command: |
+    rm -f ${test-result-pattern}
+
+    ${next-value}
+
+  boring.files:
+    - '@{next-value|[]}'
+    - ${test-result-pattern}
+
+  junit.patterns:
+    - '@{next-value|[]}'
+    - ${test-result-pattern}
+
+#  lisp.archive.exclude:default:
+#    - 'test-results-*.xml'
+#    - '@{next-value|[]}'

@@ -1,0 +1,51 @@
+inherit:
+  - description/base
+
+variables:
+  description.none:text: -none-
+  description.unknown:text: -unknown-
+
+  description.nature-list:text: ${natures},
+  description.programming-language-list:text: ${programming-languages},
+
+  description.info-table:text: |2
+      License: ${license}
+      Most recent commit: ${most-recent-commit.date}
+      Natures: @{description.nature-list:${description.mode}}
+      Programming Languages: @{description.programming-language-list:${description.mode}}
+      Homepage: ${homepage.url|-none-}
+      Wiki: ${wiki.url|-none-}
+      Documentation: ${documentation.url|-none-}
+      SCM Browser: ${scm-browser.url|-none-}
+      Bug Tracker: ${bug-tracker.url|-none-}
+      Mailing List: ${mailing-list.url|-none-}
+
+  description.authors-list:text: |2
+      * Author: ${authors}
+
+  description.maintainers-list:text: |2
+      * Maintainer: ${maintainers}
+
+  description.committers-list:text: |2
+      * Committer: ${committers}
+
+  description.recipe-contacts-list:text: |2
+      * ${recipe-contacts}
+
+  build-job.description:text: |
+    ===============================================================================
+    ${description.deployment|${description.unknown:${description.mode}}} for ${version-name} version of ${project-name}
+    ===============================================================================
+
+    !!! This job is automatically generated - do not modify by hand. !!!
+
+    Project Description
+      ${description}
+
+    Project Meta Data
+    ${description.info-table:${description.mode}}
+
+    Project Contact:
+    @{description.maintainers-list:${description.mode}}@{description.authors-list:${description.mode}}@{description.committers-list:${description.mode}}
+    Recipe Contact:
+    @{description.recipe-contacts-list:${description.mode}}

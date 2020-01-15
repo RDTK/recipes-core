@@ -16,6 +16,7 @@ aspects:
     aspect: git-repository-browser
     conditions:
       scm: git
+      disabled: true # TODO
     variables:
-      aspect.git-repository-browser.kind: gitlab
+      aspect.git-repository-browser.kind: gitlab # TODO not yet supported
       aspect.git-repository-browser.url: ${gitlab.project-url|}

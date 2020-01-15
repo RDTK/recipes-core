@@ -1,0 +1,39 @@
+inherit:
+  - boring
+
+variables:
+  extra-requires:
+    - program: sloccount
+    - '@{next-value|[]}'
+
+  boring.files:
+    - '@{next-value|[]}'
+    - sloccount.sc
+
+  sloccount.exclude-patterns:absolute: []
+
+  sloccount.exclude-patterns:relative:
+    - '@{next-value|[]}'
+    - '@{boring.everything}'
+
+  sloccount.find.exclude-patterns:absolute: -wholename "${sloccount.exclude-patterns:absolute}"'*'
+  sloccount.find.exclude-patterns:relative: -name '${sloccount.exclude-patterns:relative}'
+  sloccount.find.exclude-patterns:
+    - '@{sloccount.find.exclude-patterns:absolute}'
+    - '@{sloccount.find.exclude-patterns:relative}'
+  sloccount.find.exclude-predicates: " -or ${sloccount.find.exclude-patterns}"
+  sloccount.find.command: |
+    find "\${WORKSPACE}" -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -not \( -wholename "\${WORKSPACE}/sloccount.sc" @{sloccount.find.exclude-predicates} \)
+
+  sloccount.directories: ${next-value|${sloccount.directories:default}}
+  sloccount.directories:default:
+    - '" \$(${sloccount.find.command}) "'
+
+aspects:
+  - name: sloccount/unix
+    aspect: sloccount
+    conditions:
+      job.tags: unix
+      sloccount.directories: .*
+    variables:
+      aspect.sloccount.directories: ${sloccount.directories}

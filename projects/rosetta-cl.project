@@ -1,0 +1,18 @@
+templates:
+  # - code-corlab
+  - common-lisp-source
+  - base
+
+variables:
+  # redmine-project: rosetta
+  # redmine.repository-id: cl
+  repository: https://code.cor-lab.de/git/rosetta.git.cl
+
+  releases:
+    - '0.4'
+    - '0.3'
+    - '0.2'
+  branches:
+    - master
+    - '@{releases}'
+  tags: release-${releases}

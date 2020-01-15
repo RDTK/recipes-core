@@ -1,0 +1,20 @@
+variables:
+  junit.keep-long-stdio?: false
+  junit.health-scale-factor: 1.0
+  junit.allow-empty-results?: ${next-value|false}
+
+  junit.patterns: ${junit.patterns:${mode}|${junit.patterns:default|[]}}
+  junit.patterns:default: []
+
+  junit.pattern: ${junit.pattern:${mode}|${junit.pattern:default|}}
+  junit.pattern:default: '@{junit.pattern-elements}'
+  junit.pattern-elements: ', ${junit.patterns}'
+
+aspects:
+  - name: unit-test-report.junit
+    aspect: junit
+    variables:
+      aspect.junit.pattern: ${junit.pattern}
+      aspect.junit.keep-long-stdio?: ${junit.keep-long-stdio?:${mode}|${junit.keep-long-stdio?}}
+      aspect.junit.health-scale-factor: ${junit.health-scale-factor:${mode}|${junit.health-scale-factor}}
+      aspect.junit.allow-empty-results?: ${junit.allow-empty-results?:${mode}|${junit.allow-empty-results?}}

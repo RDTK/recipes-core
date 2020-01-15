@@ -1,24 +1,32 @@
 # This template controls basic aspects of generated Jenkins jobs
 
+inherit:
+  - names
+
 variables:
+  kind: ${build-job.kind} # TODO the generator still reads this
   build-job.kind: ${next-value|${build-job.kind:default}}
   build-job.kind:default: project
 
+  # Name of the generated job. We use the "safe" project and version
+  # name to ensure that "/" have been replaced with "-".
+  build-job-name: ${build-job.name} # TODO the generator still reads this
   build-job.name: ${next-value|${build-job.name:default}}
-  build-job.name:default: ${project-name}-${version-name}-${mode}-${distribution-name}
+  build-job.name:default: ${safe-project-and-version-name}-${mode}-${safe-distribution-name}
 
   build-job.disabled?: ${next-value|true}
 
   build-job.tags:
     - ${mode}
+    - ${target.platform|}
     - '@{natures|[]}'
     - '@{next-value|[]}'
+    - architecture-dependent
+    - unix
+    - linux
 
 jobs:
   - name: main
     variables:
       job.tags:
-        - architecture-dependent
-        - unix
-        - linux
         - '@{build-job.tags|[]}'

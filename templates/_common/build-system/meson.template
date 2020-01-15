@@ -4,12 +4,14 @@ variables:
     - '@{next-value|[]}'
 
   extra-requires:
-    - nature: program
-      target: meson
-    - nature: program
-      target: ninja
+    - program: meson
+    - program: ninja
     - '@{next-value|[]}'
 
   tasks.patterns:
     - '**/meson.build'
+    - '@{next-value|[]}'
+
+  build-job.tags:
+    - meson
     - '@{next-value|[]}'

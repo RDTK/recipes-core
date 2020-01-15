@@ -2,4 +2,11 @@ include:
   - lisp/base-nightly
 
 versions:
+  - rosetta-cl                      @master
+  - rosetta-project-cl              @master
+
+  - cl-text.source-location         @future
+  - cl-model.transform.trace        @future
+  - cl-language.yaml                @future
+
   - build-generator                 @master

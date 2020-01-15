@@ -1,0 +1,8 @@
+inherit:
+  - jenkins/job-defaults
+  - jenkins/description
+  - jenkins/slaves
+  - jenkins/retention
+
+  - jenkins/console-ansi-color
+  - jenkins/console-timestamper

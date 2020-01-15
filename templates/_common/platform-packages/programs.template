@@ -320,6 +320,10 @@ variables:
           xenial:
             packages:
             - clang-6.0
+          bionic:
+            packages:
+            - clang-6.0
+
 
   - name: program-sbcl
     variables:
@@ -563,6 +567,34 @@ variables:
         ubuntu:
           packages:
           - texinfo
+
+  - name: program-latex
+    variables:
+      extra-provides:
+        - program: pdflatex
+      platform-requires:
+        ubuntu:
+          packages:
+            - texlive
+            - texlive-latex-extra
+
+  - name: program-epstopdf
+    variables:
+      extra-provides:
+        - program: epstopdf
+      platform-requires:
+        ubuntu:
+          packages:
+            - texlive-font-utils
+
+  - name: program-fig2dev
+    variables:
+      extra-provides:
+        - program: fig2dev
+      platform-requires:
+        ubuntu:
+          packages:
+            - fig2dev
 
   # Other
 

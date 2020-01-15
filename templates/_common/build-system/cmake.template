@@ -5,8 +5,7 @@ variables:
     - '@{next-value|[]}'
 
   extra-requires:
-    - nature: program
-      target: cmake
+    - program: cmake
     - '@{next-value|[]}'
 
   tasks.patterns:

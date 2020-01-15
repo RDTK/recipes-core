@@ -1,0 +1,69 @@
+aspects:
+  - name: warnings.cmake
+    aspect: warnings
+    conditions:
+      job.tags: cmake
+    variables:
+      aspect.warnings.parsers:
+        - Cmake
+
+  - name: warnings.gcc
+    aspect: warnings
+    conditions:
+      job.tags: gcc
+    variables:
+      aspect.warnings.parsers:
+        - GNU Compiler 4 (gcc)
+
+  - name: warnings.llvm
+    aspect: warnings
+    conditions:
+      job.tags: llvm
+    variables:
+      aspect.warnings.parsers:
+        - Apple LLVM Compiler (Clang)
+
+  - name: warnings.maven
+    aspect: warnings
+    conditions:
+      job.tags: maven
+    variables:
+      aspect.warnings.parsers:
+        - Maven
+
+  - name: warnings.javac
+    aspect: warnings
+    conditions:
+      job.tags: java
+    variables:
+      aspect.warnings.parsers:
+        - Java Compiler (javac)
+
+  - name: warnings.doxygen
+    aspect: warnings
+    conditions:
+      job.tags: doxygen
+    variables:
+      aspect.warnings.parsers:
+        - Doxygen
+
+  - name: warnings.sphinx-build
+    aspect: warnings
+    conditions:
+      job.tags: sphinx
+    variables:
+      aspect.warnings.parsers:
+        - Sphinx-build
+
+  - name: warnings.sbcl
+    aspect: warnings
+    conditions:
+      job.tags: sbcl
+    variables:
+      aspect.warnings.parsers:
+        - SBCL
+
+  - name: warnings.generic
+    aspect: warnings
+    variables:
+      aspect.warnings.parsers: ${warnings.parsers|[]}

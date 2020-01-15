@@ -1,5 +1,5 @@
-inherit:
-  - slave-defaults
+# inherit:
+#  - jenkins/slave-defaults
 
 variables:
   run-hook-function:

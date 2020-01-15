@@ -1,0 +1,16 @@
+templates:
+  - forge/github
+  - common-lisp-test-adapter
+  - common-lisp-source
+  - base
+
+variables:
+  github.user: scymtym
+  github.project: language.yaml
+
+  releases: []
+  branches:
+    - master
+    - future
+    - '@{releases}'
+  tags: release-${releases}

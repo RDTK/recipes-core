@@ -1,0 +1,5 @@
+inherit:
+  - repository/archive
+  - repository/git
+  - repository/subversion
+  - repository/mercurial

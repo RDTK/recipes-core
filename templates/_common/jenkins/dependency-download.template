@@ -2,5 +2,6 @@ aspects:
   - name: jenkins/dependency-download.dependency-download
     aspect: dependency-download
     variables:
-      aspect.dependency-download.dependencies: []
-      aspect.dependency-download.format: ''
+      # aspect.dependency-download.dependencies: []
+      # aspect.dependency-download.format: ''
+      upstream-dir: ${dependency-dir}

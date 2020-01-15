@@ -1,0 +1,23 @@
+variables:
+  html-report.base-directory: ${next-value|.}
+  html-report.include: ${next-value|${html-report.include:default}}
+  html-report.include:default:
+    - '**/*.html'
+  html-report.index-files: ${next-value|html-report.index-files:default}
+  html-report.index-files:default:
+    - index.html
+  html-report.keep-all?:      ${next-value|true}
+  html-report.allow-missing?: ${next-value|false}
+
+aspects:
+  - name: html-report.html-report
+    aspect: html-report
+    conditions:
+      html-report.name: .+
+    variables:
+      aspect.html-report.name:           ${html-report.name}
+      aspect.html-report.base-directory: ${html-report.base-directory}
+      aspect.html-report.include:        ${html-report.include}
+      aspect.html-report.index-files:    ${html-report.index-files}
+      aspect.html-report.keep-all?:      ${html-report.keep-all?}
+      aspect.html-report.allow-missing?: ${html-report.allow-missing?}

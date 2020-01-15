@@ -2,8 +2,7 @@ variables:
   subversion.checkout-strategy: ${next-value|fresh-copy}
 
   extra-requires:
-    - nature: program
-      target: svn
+    - '@(if $(equal ${scm|none} svn) [ { nature: program, target: svn } ])'
     - '@{next-value|[]}'
 
 aspects:

@@ -1,0 +1,77 @@
+inherit:
+  - description/base
+
+variables:
+  description.none:html: <em>none</em>
+  description.unknown:html: <em>unknown</em>
+
+  description.license:html: <dt>License</dt> <dd>${license}</dd>
+
+  description.nature-list:html: ${natures},
+  description.natures:html: <dt>Natures<dt> <dd>@{description.nature-list:${description.mode}}</dd>
+  description.programming-language-list:html: '${programming-languages}, '
+  description.programming-languages:html: <dt>Programming Languages<dt>
+                                          <dd>@{description.programming-language-list}</dd>
+  description.homepage:html: <dt>Homepage</dt>
+                             <dd><a href="${homepage.url|-}">${homepage.url|}</a></dd>
+  description.wiki:html: '<dt>Wiki</dt>
+                          <dd><a href="${wiki.url|-}">${wiki.url|${description.none:${description.mode}}}</a></dd>'
+  description.documentation:html: <dt>Documentation</dt>
+                                  <dd><a href="${documentation.url|-}">${documentation.url|${description.none:${description.mode}}}</a></dd>
+  description.scm-browser:html: <dt>SCM Browser</dt>
+                                <dd><a href="${scm-browser.url|-}">${scm-browser.url|${description.none:${description.mode}}}</a></dd>
+  description.bug-tracker:html: <dt>Bug Tracker</dt>
+                                <dd><a href="${bug-tracker.url|-}">${bug-tracker.url|${description.none:${description.mode}}}</a></dd>
+  description.mailing-list:html: <dt>Mailing List</dt>
+                                 <dd><a href="${mailing-list.url|-}">${mailing-list.url|${description.none:${description.mode}}}</a></dd>
+  description.info-table:html: |
+    <dl>
+      ${description.license:${description.mode}}
+      ${description.natures:${description.mode}}
+      ${description.programming-languages:${description.mode}}
+      ${description.homepage:${description.mode}}
+      ${description.wiki:${description.mode}}
+      ${description.documentation:${description.mode}}
+      ${description.scm-browser:${description.mode}}
+      ${description.bug-tracker:${description.mode}}
+      ${description.mailing-list:${description.mode}}
+    </dl>
+
+  description.authors-list:html: |
+    <li>Author: ${authors}</li>
+
+  description.maintainers-list:html: |
+    <li>Maintainer: ${maintainers}</li>
+
+  description.committers-list:html: |
+    <li>Committer: ${committers}</li>
+
+  description.recipe-contacts-list:html: |
+    <li>${recipe-contacts}</li>
+
+  build-job.description:html: |
+    <div style="background:#f0f0f0">
+      <em>${description.deployment|Unknown} for the ${version-name} version of the ${project-name} project.</em>
+      <br/>
+      <span style="color:red">This job is automatically generated - do not modify by hand.</span>
+
+      <h3>Project Description</h3>
+
+      ${description}
+
+      <h3>Project Meta Data</h3>
+
+      ${description.info-table:${description.mode}}
+
+      <h3>Project Contact</h3>
+
+      <ul>
+      @{description.maintainers-list:${description.mode}}@{description.authors-list:${description.mode}}@{description.committers-list:${description.mode}}
+      </ul>
+
+      <h3>Recipe Contact</h3>
+
+      <ul>
+      @{description.recipe-contacts-list:${description.mode}}
+      </ul>
+    </div>

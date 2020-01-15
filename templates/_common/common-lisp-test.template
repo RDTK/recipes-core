@@ -1,0 +1,3 @@
+inherit:
+  - common-lisp-test-adapter
+  - common-lisp-coverage-report

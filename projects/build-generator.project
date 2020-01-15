@@ -1,5 +1,6 @@
 templates:
   - forge/github
+  - common-lisp-test-adapter
   - common-lisp-executable
   - base
 

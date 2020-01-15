@@ -1,0 +1,10 @@
+variables:
+  build-job.description: ${build-job.description:${description.mode}}
+
+aspects:
+  - name: description.description
+    aspect: description
+    conditions:
+      build-job.description: .*
+    variables:
+      aspect.description.description: ${build-job.description}

@@ -5,8 +5,7 @@ variables:
     - '@{next-value|[]}'
 
   extra-requires:
-    - nature: program
-      target: mvn
+    - program: mvn
     - '@{next-value|[]}'
 
   tasks.patterns:

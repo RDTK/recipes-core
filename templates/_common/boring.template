@@ -27,11 +27,15 @@ variables:
 
   # All boring files/directories
   boring.files:
+    - '@{next-value|[]}'
     - '@{boring.version-control.files}'
     - '@{boring.editor.files}'
   boring.directories:
+    - '@{next-value|[]}'
+    - ${dependency-dir:relative}
+    - ${build-dir:relative}
     - '@{boring.version-control.directories}'
     - '@{boring.editor.directories}'
   boring.everything:
-    - '@{boring.version-control}'
-    - '@{boring.editor}'
+    - '@{boring.files}'
+    - '@{boring.directories}'

@@ -1,16 +1,14 @@
 inherit:
-  - jenkins/job-defaults
-  - jenkins/retention
+  - jenkins/base
 
-  - repository/archive
-  - repository/git
-  - repository/subversion
-  - repository/mercurial
+  - repository/all
 
   - boring
 
 variables:
   mode: toolkit
 
+  dependencies.mode: ${next-value|none}
   dependency-dir: ${toolkit.dir}
-  dependencies.mode: ${next-value|minimal}
+  dependency-dir:absolute: ${dependency-dir}
+  dependency-dir:relative: ${dependency-dir}

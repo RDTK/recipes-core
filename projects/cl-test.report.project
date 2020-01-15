@@ -1,0 +1,15 @@
+templates:
+  - forge/github
+  # - org-mode-readme
+  - common-lisp-source
+  - base
+
+variables:
+  recipe.maintainer:
+    - Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+
+  github.user: scymtym
+  github.project: test.report
+
+  branches:
+    - future

@@ -1,0 +1,19 @@
+templates:
+  - forge/github
+  - common-lisp-test-adapter
+  - common-lisp-source
+  - base
+
+variables:
+  recipe.maintainer:
+    - Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+
+  github.user: scymtym
+  github.project: text.source-location
+
+  releases: []
+  branches:
+    - master
+    - future
+    - '@{releases}'
+  tags: release-${releases}

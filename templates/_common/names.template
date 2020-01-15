@@ -1,0 +1,9 @@
+variables:
+  project-and-version-name: ${project-name}-${version-name}
+
+  # Safe variants
+  safe-project-name: $(replace '-' / ${project-name})
+  safe-version-name: $(replace '-' / ${version-name})
+  safe-project-and-version-name: ${safe-project-name}-${safe-version-name}
+
+  safe-distribution-name: $(replace '-' / ${distribution-name})

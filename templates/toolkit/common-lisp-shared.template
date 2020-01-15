@@ -1,3 +1,9 @@
+inherit:
+  - platform-packages/libraries # for foreign libraries
+  - platform-packages/programs
+  - platform-packages/fonts
+  - platform-packages/quicklisp
+
 variables:
   lisp.archive.command: |
     # Install source

@@ -1,0 +1,41 @@
+inherit:
+  - jenkins/html-report
+
+variables:
+  coverage-report.directory: coverage-report
+
+  lisp.test.load-systems:ci: |-
+    $(case ${language.common-lisp.compiler}
+      sbcl
+        - '@{next-value|${lisp.load-systems:default}}'
+        - sb-cover
+      else
+        ${next-value|${lisp.load-systems:default}}
+    )
+
+  lisp.compile.expressions:ci: |-
+    $(case ${language.common-lisp.compiler}
+      sbcl
+        - '@{next-value|${lisp.compile.expressions:default}}'
+        - "'(require :sb-cover)'"
+        - "'(declaim (optimize sb-cover:store-coverage-data))'"
+      else
+        ${next-value|${lisp.compile.expressions:default}}
+    )
+
+  lisp.test.expressions:ci:
+    - '@{next-value|${lisp.test.expressions:default}}'
+    - '(sb-cover:report "${coverage-report.directory}/")'
+
+aspects:
+  - name: coverage-report.html-report
+    aspect: html-report
+    variables:
+      aspect.html-report.name:           Coverage Report
+      aspect.html-report.base-directory: ${coverage-report.directory}
+      aspect.html-report.include:
+        - '*.html'
+      aspect.html-report.index-files:
+        - cover-index.html
+      aspect.html-report.allow-missing?: false
+      aspect.html-report.keep-all?:      true

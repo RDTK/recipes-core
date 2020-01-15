@@ -1,12 +1,4 @@
 inherit:
-  - language/common-lisp
-
-  - build-system/asdf
-
-  - platform-packages/programs
-  - platform-packages/libraries # for foreign functions
-  - platform-packages/quicklisp
-
   - common-lisp-shared
   - common-lisp-executable-base
 

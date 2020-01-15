@@ -89,6 +89,9 @@ variables:
         version: 99.99.99
 
       - nature: asdf
+        target: cxml
+        version: 99.99.99
+      - nature: asdf
         target: cxml-rpc
         version: 99.99.99
       - nature: asdf

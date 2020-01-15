@@ -7,7 +7,8 @@ variables:
 
   bootstrap.command: ${bootstrap.command:${mode}|${bootstrap.command:default|# Nothing to do}}
 
-  configure.prefix: ${toolkit.dir}
+  configure.prefix: ${configure.prefix:${mode}|${configure.prefix:default}}
+  configure.prefix:default: ${toolkit.dir}
 
   configure.enable: ${configure.enable:${mode}|${configure.enable:default}}
   configure.enable:default: []
@@ -28,9 +29,6 @@ variables:
 
   configure.after: ${next-value| }
 
-  make.test.targets:
-  - check
-
   shell.command: ${shell.command:${mode}|${shell.command:default}}
   shell.command:default: |
     # Environment Setup
@@ -47,6 +45,13 @@ variables:
 
     ${make.command}
 
-  build-job.tags:
-  - gcc
-  - '@{next-value|[]}'
+  # CI mode
+  make.test.targets:
+    - check
+
+  make.package.directory: ${configure.prefix}
+
+  make.command:ci:
+    ${next-value}
+
+    ${make.package.command}

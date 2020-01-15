@@ -1,0 +1,17 @@
+inherit:
+  - description/analysis
+
+variables:
+  description.mode: ${next-value|text}
+
+  description.unknown: ${description.unknown:${description.mode}}
+  description.none: ${description.none:${description.mode}}
+
+  description.nature-list: ${description.nature-list:${description.mode}}
+  description.natures: ${description.natures:${description.mode}}
+
+  description.programming-language-list: ${description.programming-language-list:${description.mode}}
+  description.programming-languages: ${description.programming-languages:${description.mode}}
+
+  description.homepage: $(if ${homepage.url|} ${description.homepage:${description.mode}})
+  description.wiki: $(if ${wiki.url|} ${description.wiki:${description.mode}})

@@ -120,7 +120,9 @@ jobs:
     variables:
       job.tags:
         - orchestration-control
+      kind: ${build-job.kind} # TODO the generator still reads this
       build-job.kind: project
+      build-job-name: ${build-job.name} # TODO the generator still reads this
       build-job.name: ${orchestration-initial.build-job-name}
       build-job.description: |
         Initial job for ${mode} mode of distribution ${distribution-name}.

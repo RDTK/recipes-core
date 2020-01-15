@@ -1,0 +1,20 @@
+templates:
+  # - code-corlab
+  - common-lisp-source
+  - base
+
+variables:
+  description: Analysis of software projects within the Rosetta Framework
+
+  repository: https://code.cor-lab.de/git/rosetta.git.project-cl
+  # redmine-project: rosetta
+  # redmine.repository-id: project-cl
+
+  releases:
+    - '0.5'
+    - '0.4'
+    - '0.3'
+  branches:
+    - master
+    - '@{releases}'
+  tags: release-${releases}

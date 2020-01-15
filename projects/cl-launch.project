@@ -25,22 +25,17 @@ variables:
     - 4.1.3
 
   extra-provides:
-    - nature: program
-      target: cl-launch
+    - program: cl-launch
     - '@{next-value|[]}'
   extra-requires:
-    - nature: meta
-      target: quicklisp
-    - nature: meta
-      target: common-lisp-compiler
-    - nature: program
-      target: make
-    - nature: program
-      target: tar
+    - meta: quicklisp
+    - meta: common-lisp-compiler
+    - program: make
+    - program: tar
     - '@{next-value|[]}'
 
   runtime-dependency-dir: ${runtime-dependency-dir:${mode}|${dependency-dir}}
-  runtime-dependency-dir:ci: ${dependency-dir}/install
+  runtime-dependency-dir:ci: ${dependency-dir:absolute}/install
 
   replacements:
     - try_resource_file /etc/cl-launchrc#try_resource_file "${runtime-dependency-dir}"/etc/cl-launchrc
@@ -54,13 +49,18 @@ variables:
   sbcl.runtime-options: ${sbcl.runtime-options:${mode}|${sbcl.runtime-options:default}}
   sbcl.runtime-options:default: --noinform --no-userinit
 
+  ccl.runtime-options: --no-init --quiet --batch
+
   configuration.file: ${toolkit.dir}/etc/cl-launchrc
   configuration: ${configuration:${mode}|${configuration:default}}
   configuration:default: |
     SBCL=\${SBCL:-"${runtime-dependency-dir}/bin/sbcl"}
     SBCL_OPTIONS=\${SBCL_OPTIONS:-"${sbcl.runtime-options}"}
 
-    LISPS=sbcl
+    CCL=\${CCL:-"${runtime-dependency-dir}/ccl/lx86cl64"}
+    CCL_OPTIONS=\${CCL_OPTIONS:-"${ccl.runtime-options}"}
+
+    LISPS=${language.common-lisp.compiler}
 
     SOURCE_REGISTRY=\${SOURCE_REGISTRY:-"${runtime-dependency-dir}/share/common-lisp/source//"}
   configuration:ci: |
@@ -91,10 +91,10 @@ variables:
     ${configuration}
     EOF
 
-  shell.command: ${install.command}
+  shell.command:default: ${install.command}
 
+  # CI mode
   archive-name: ${project-name}-${version-name}.tar.gz
-
   shell.command:ci: |
     ${install.command}
 
@@ -110,7 +110,9 @@ variables:
     - Makefile
     - '@{next-value|[]}'
 
-  archive-pattern: ${archive-name}
+  archive.patterns:
+    - ${archive-name}
+    - '@{next-value|[]}'
 
 versions:
   - pattern: '^([0-9]+\.[0-9]+\.[0-9]+)-for-sbcl-binary$'

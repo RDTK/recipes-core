@@ -1,4 +1,6 @@
 versions:
-  - sbcl                            @master
+  - sbcl                            @sbcl-2.0.0-with-doc
   - cl-launch                       @master
   - quicklisp                       @current
+
+  - cl-test.report                  @future

@@ -1,4 +1,9 @@
 variables:
+  language.c++.compiler: ${next-value|gcc}
+
+  extra-requires:
+    - program: ${language.c++.compiler}
+    - '@{next-value|[]}'
 
   tasks.patterns:
     - '**/*.c'
@@ -11,4 +16,5 @@ variables:
 
   build-job.tags:
     - c++
+    - ${language.c++.compiler}
     - '@{next-value|[]}'

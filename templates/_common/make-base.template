@@ -53,10 +53,12 @@ variables:
     }
 
   junit.patterns:
-  - '**/make_test_result.xml'
-  - '@{next-value|[]}'
+    - '**/make_test_result.xml'
+    - '@{next-value|[]}'
 
-  archive-pattern: ${archive-name}
+  archive.patterns:
+    - '@{next-value|[]}'
+    - ${archive-name}
 
   archive-name: ${project-name}-${version-name}.tar.gz
 
@@ -65,23 +67,41 @@ variables:
 
   make.package.targets.args: '${make.package.targets} '
   make.package.command: |
-    DESTDIR="\${WORKSPACE}/install" \
-      ${make.binary} @{make.flags.args} @{make.package.targets.args}
+    ${make.binary} @{make.flags.args} @{make.package.targets.args}
 
     (
       cd "\${WORKSPACE}"
-      tar -czf "${archive-name}" install
+      tar -czf "${archive-name}" "${make.package.directory}"
     )
 
   make.build.targets: []
 
-  make.command:
+  make.command: ${make.command:${mode}|${make.command:default}}
+  make.command:default:
     ${make.build.command}
 
   shell.command: |
     @{environment.exports}
 
     ${make.command}
+
+  # Toolkit mode
+  make.install.targets:
+    - install
+
+  make.command:toolkit:
+    ${make.command:default}
+
+    ${make.install.command}
+
+  # CI mode
+  make.package.targets:
+    - install
+
+  make.command:ci:
+    ${make.command:default}
+
+    ${make.test.command}
 
 aspects:
   - name: make.shell

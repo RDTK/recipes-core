@@ -1,7 +1,9 @@
 aspects:
   - name: jenkins/artifact-archiving.archive-artifacts
     aspect: archive-artifacts
+    conditions:
+      archive.patterns: .*
     variables:
       aspect.publisher-constraints.archive-artifacts:
         - [ after, <all> ]
-      aspect.archive-artifacts.file-pattern: ${archive-pattern:${mode}|${archive-pattern}}
+      aspect.archive-artifacts.file-pattern: ${archive.patterns:${mode}|${archive.patterns}}

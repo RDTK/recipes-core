@@ -21,32 +21,21 @@ variables:
     - master
 
   extra-requires:
-    - nature: library
-      target: png
-    - nature: library
-      target: xpm
-    - nature: library
-      target: jpeg
-    - nature: library
-      target: gif
-    - nature: library
-      target: tiff
-    - nature: library
-      target: rsvg
+    - library: png
+    - library: xpm
+    - library: jpeg
+    - library: gif
+    - library: tiff
+    - library: rsvg
 
-    - nature: library
-      target: ncurses
+    - library: ncurses
 
-    - nature: library
-      target: gnutls
+    - library: gnutls
 
-    - nature: library
-      target: dbus
-    - nature: library
-      target: gconf
+    - library: dbus
+    - library: gconf
 
-    - nature: program
-      target: makeinfo
+    - program: makeinfo
 
     - '@{next-value|[]}'
 
@@ -78,10 +67,8 @@ versions:
       branch: ${match:1}
 
       extra-requires:
-        - nature: pkg-config
-          target: gtk+-3.0
-        - nature: pkg-config
-          target: webkit2gtk-4.0
+        - pkg-config: gtk+-3.0
+        - pkg-config: webkit2gtk-4.0
         - '@{next-value|[]}'
 
       configure.with:

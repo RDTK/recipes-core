@@ -4,10 +4,7 @@ variables:
   git.clean-before-checkout?: ${next-value|true}
 
   extra-requires:
-    # - '@(if $(equal ${scm} git)
-    - nature: program
-      target: git
-    #    )'
+    - '@(if $(equal ${scm|none} git) [ { nature: program, target: git } ] )'
     - '@{next-value|[]}'
 
 aspects:

@@ -1,0 +1,12 @@
+variables:
+  platform-provides:
+    - '@{next-value|[]}'
+
+    - name: font-dejavu
+      variables:
+        extra-provides:
+          - font: dejavu
+        platform-requires:
+          ubuntu:
+            packages:
+              - fonts-dejavu

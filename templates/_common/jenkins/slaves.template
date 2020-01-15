@@ -1,0 +1,57 @@
+variables:
+  build-job.slaves: ${next-value|${build-job.slaves:${mode}|${build-job.slaves:default}}}
+  build-job.slaves:default:
+    - master
+
+  build-job.restrict-to-slaves: ${next-value|${build-job.restrict-to-slaves:${kind}}}
+  build-job.restrict-to-slaves:matrix: master
+  build-job.restrict-to-slaves:project: master
+
+  build-job.slaves.ubuntu:
+    - '@{slaves}'
+  build-job.slaves.linux:
+    - '@{slaves.ubuntu}'
+
+  build-job.slaves.macos: ${next-value|${build-job.slaves.macos:default}}
+  build-job.slaves.macos:default:
+    - macos
+
+  build-job.slaves.win32: ${next-value|${build-job.slaves.win32:default}}
+  build-job.slaves.win32:default:
+    - win32
+
+aspects:
+  - name: slaves/linux/matrix
+    aspect: slaves
+    conditions:
+      build-job.kind: matrix
+      build-job.tags: linux
+    variables:
+      aspect.slaves.slaves: ${build-job.slaves.linux}
+      aspect.slaves.restrict-to-slaves: ${build-job.restrict-to-slaves|}
+
+  - name: slaves/linux/project
+    aspect: slaves
+    conditions:
+      build-job.kind: project
+      build-job.tags: linux
+    variables:
+      aspect.slaves.restrict-to-slaves: ${build-job.restrict-to-slaves|}
+
+  - name: slaves/win32/matrix
+    aspect: slaves
+    conditions:
+      build-job.kind: matrix
+      build-job.tags: win32
+    variables:
+      aspect.slaves.slaves: ${slaves.win32}
+      aspect.slaves.restrict-to-slaves: ${build-job.restrict-to-slaves|}
+
+  - name: slaves/win32/project
+    aspect: slaves
+    conditions:
+      build-job.kind: project
+      build-job.tags: win32
+    variables:
+      private.slaves: ${slaves.win32}
+      aspect.slaves.restrict-to-slaves: ${restrict-to-slaves:win32|${restrict-to-slaves|@{private.slaves}}}
